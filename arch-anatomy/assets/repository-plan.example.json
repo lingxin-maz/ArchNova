@@ -1,0 +1,20 @@
+{
+  "target_id": "proposal:prefix-scan",
+  "judgment": "A causal recurrent update with an associative composition may admit parallel prefix evaluation; this is a candidate implementation route, not a claimed speedup.",
+  "mechanism": "Associative prefix scan for causal sequence computation",
+  "required_features": [
+    "Associative binary operator scan",
+    "Support tensor inputs"
+  ],
+  "interface_constraints": [
+    "Causal prefix outputs preserve sequence order",
+    "PyTorch tensor interface"
+  ],
+  "queries": [
+    "associative scan pytorch in:name,description,readme"
+  ],
+  "code_hints": [
+    "assoc",
+    "scan"
+  ]
+}

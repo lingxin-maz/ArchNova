@@ -1,0 +1,2422 @@
+{
+  "$comment": "规范源：组、槽位、枚举、阶段和策略。build_ontology.py 生成 schema、ontology_gen.py 和 ontology.md；样例和评测是独立审查的测试数据，不宣称由生成器自动更新。",
+  "version": "2.5.0",
+  "title": "arch-anatomy ontology",
+  "groups": [
+    {
+      "id": "R",
+      "name": "输入与表示",
+      "question": "网络看到的最小单元是什么，什么信息在这一步被销毁",
+      "slots": [
+        {
+          "id": "R1",
+          "name": "离散化单元",
+          "question": "token / patch / node / collocation point / 像素"
+        },
+        {
+          "id": "R2",
+          "name": "提升算子",
+          "question": "离散单元到 d 维向量怎么做的"
+        },
+        {
+          "id": "R3",
+          "name": "连续坐标编码",
+          "question": "连续坐标如何进入网络"
+        },
+        {
+          "id": "R4",
+          "name": "输入标度",
+          "question": "是否逐通道或逐域归一化"
+        },
+        {
+          "id": "R5",
+          "name": "条件注入点",
+          "question": "保真度、边界条件、物性参数从哪一层进"
+        },
+        {
+          "id": "R6",
+          "name": "掩码与分组",
+          "question": "padding / sensor / 分组结构如何影响聚合"
+        }
+      ]
+    },
+    {
+      "id": "P",
+      "name": "先验载体",
+      "question": "哪些结构是硬约束，哪些只是软偏好",
+      "slots": [
+        {
+          "id": "P1",
+          "name": "局部性",
+          "question": "感受野由什么界定"
+        },
+        {
+          "id": "P2",
+          "name": "对称群",
+          "question": "断言了哪个群的等变或不变性"
+        },
+        {
+          "id": "P3",
+          "name": "关系结构",
+          "question": "图、拉普拉斯、注意力掩码、边界算子"
+        },
+        {
+          "id": "P4",
+          "name": "多尺度",
+          "question": "是否分层、金字塔、小波、多重网格"
+        },
+        {
+          "id": "P5",
+          "name": "几何与流形",
+          "question": "数据在网格、流形、点云还是规则域"
+        },
+        {
+          "id": "P6",
+          "name": "因果性",
+          "question": "是否强制单向依赖"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "主干与组合",
+      "question": "深度方向如何串联，状态如何跨步传递",
+      "slots": [
+        {
+          "id": "B1",
+          "name": "块拓扑",
+          "question": "残差或稠密或并行分支，norm 在支路内外"
+        },
+        {
+          "id": "B2",
+          "name": "深度宽度调度",
+          "question": "各层宽度、是否跨层共享权重"
+        },
+        {
+          "id": "B3",
+          "name": "跨块信息流",
+          "question": "skip、门控、早退、超连接"
+        },
+        {
+          "id": "B4",
+          "name": "递归与状态机制",
+          "question": "有没有显式状态：RNN hidden、KV cache、SSM state、memory token"
+        },
+        {
+          "id": "B5",
+          "name": "并行结构",
+          "question": "序列化 scan、块并行、树形归约"
+        }
+      ]
+    },
+    {
+      "id": "M",
+      "name": "混合算子",
+      "question": "信息在位置之间如何交换（含 attention 与一切替代品）",
+      "slots": [
+        {
+          "id": "M1",
+          "name": "交互范围",
+          "question": "全对全 / 局部 / 稀疏 / 全局 token"
+        },
+        {
+          "id": "M2",
+          "name": "打分-聚合形式",
+          "question": "具体代数形式"
+        },
+        {
+          "id": "M3",
+          "name": "路由与选择",
+          "question": "top-k、MoE、硬注意力、检索"
+        },
+        {
+          "id": "M4",
+          "name": "多头与分组",
+          "question": "头数、共享方式、头间交互"
+        },
+        {
+          "id": "M5",
+          "name": "条件化路径",
+          "question": "除了自混合，还混合什么"
+        },
+        {
+          "id": "M6",
+          "name": "状态更新规则",
+          "question": "对 SSM/线性注意力：A,B,C,Delta 如何离散化"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "通道变换",
+      "question": "每个位置上特征如何被重写",
+      "slots": [
+        {
+          "id": "E1",
+          "name": "逐点变换",
+          "question": "MLP、单线性、门控 MLP"
+        },
+        {
+          "id": "E2",
+          "name": "扩张比与瓶颈",
+          "question": "FFN 扩张比、低秩分解"
+        },
+        {
+          "id": "E3",
+          "name": "激活函数",
+          "question": "形式与其光滑性/频谱性质"
+        },
+        {
+          "id": "E4",
+          "name": "乘性调制",
+          "question": "FiLM、scale-shift、门控"
+        }
+      ]
+    },
+    {
+      "id": "N",
+      "name": "归一化与数值",
+      "question": "统计量沿哪些轴取，数值如何不炸",
+      "slots": [
+        {
+          "id": "N1",
+          "name": "归一化类型与轴",
+          "question": "LayerNorm/RMSNorm/BatchNorm/GroupNorm 沿哪些轴求统计量"
+        },
+        {
+          "id": "N2",
+          "name": "位置",
+          "question": "pre/post/sandwich、QK-norm 与残差支路的相对位置"
+        },
+        {
+          "id": "N3",
+          "name": "仿射与条件化",
+          "question": "是否可学习 gamma/beta，是否由输入产生"
+        },
+        {
+          "id": "N4",
+          "name": "数值稳定",
+          "question": "eps、fp32 upcast、logit cap、残差缩放、初始化缩放"
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "位置与序",
+      "question": "顺序信息如何编码，能否外推",
+      "slots": [
+        {
+          "id": "G1",
+          "name": "编码形式",
+          "question": "绝对/相对/旋转/学习/无"
+        },
+        {
+          "id": "G2",
+          "name": "基函数",
+          "question": "正弦、Fourier、随机特征"
+        },
+        {
+          "id": "G3",
+          "name": "外推机制",
+          "question": "NTK-aware、ALiBi、长度课程"
+        },
+        {
+          "id": "G4",
+          "name": "非序列位置的定位",
+          "question": "网格索引、坐标、拓扑序"
+        }
+      ]
+    },
+    {
+      "id": "O",
+      "name": "读出与解码",
+      "question": "输出如何被聚合与生成",
+      "slots": [
+        {
+          "id": "O1",
+          "name": "聚合读出",
+          "question": "CLS/均值/末位/注意力池化/算子基系数"
+        },
+        {
+          "id": "O2",
+          "name": "解码方式",
+          "question": "自回归/并行/扩散/流匹配/直接回归"
+        },
+        {
+          "id": "O3",
+          "name": "输出参数化",
+          "question": "logits、均值方差、分布、场值、基系数"
+        },
+        {
+          "id": "O4",
+          "name": "约束投影",
+          "question": "对称性、守恒、边界条件的硬编码"
+        }
+      ]
+    },
+    {
+      "id": "L",
+      "name": "目标函数",
+      "question": "每一项在拉扯什么",
+      "slots": [
+        {
+          "id": "L1",
+          "name": "主损失",
+          "question": "函数形式与定义域"
+        },
+        {
+          "id": "L2",
+          "name": "辅助与正则",
+          "question": "负载均衡、熵、平滑、谱正则"
+        },
+        {
+          "id": "L3",
+          "name": "物理与一致性",
+          "question": "PDE 残差、守恒、无散度"
+        },
+        {
+          "id": "L4",
+          "name": "权重平衡",
+          "question": "固定 lambda、不确定性加权、GradNorm、自适应"
+        },
+        {
+          "id": "L5",
+          "name": "采样与课程",
+          "question": "配点分布、LHS、重要性采样、数据混比"
+        },
+        {
+          "id": "L6",
+          "name": "保真度结构",
+          "question": "多保真如何组合"
+        }
+      ]
+    },
+    {
+      "id": "T",
+      "name": "训练与优化",
+      "question": "常被省略但决定架构可行性",
+      "slots": [
+        {
+          "id": "T1",
+          "name": "优化器与调度",
+          "question": "Adam/AdamW/SGD，warmup，衰减步长"
+        },
+        {
+          "id": "T2",
+          "name": "精度与并行",
+          "question": "bf16/fp8、TP/PP/EP、切分方式"
+        },
+        {
+          "id": "T3",
+          "name": "初始化与稳定性",
+          "question": "初始化缩放、梯度裁剪"
+        },
+        {
+          "id": "T4",
+          "name": "有效 batch 与序列长度",
+          "question": "与架构设计强耦合的实验条件"
+        }
+      ]
+    },
+    {
+      "id": "I",
+      "name": "推理路径",
+      "question": "部署时的行为可能与训练时不同",
+      "slots": [
+        {
+          "id": "I1",
+          "name": "单次与自回归",
+          "question": "缓存策略，是否维护跨步状态"
+        },
+        {
+          "id": "I2",
+          "name": "测试时计算",
+          "question": "采样、CoT、搜索、迭代精化"
+        },
+        {
+          "id": "I3",
+          "name": "近似",
+          "question": "量化、稀疏、蒸馏、剪枝"
+        },
+        {
+          "id": "I4",
+          "name": "单位成本",
+          "question": "每 token 或每 query 的 FLOPs、字节、延迟"
+        }
+      ]
+    },
+    {
+      "id": "S",
+      "name": "规模计量",
+      "question": "派生层：这一层不是抄来的，是算出来的",
+      "slots": [
+        {
+          "id": "S1",
+          "name": "参数分解",
+          "question": "每个部件的参数量，谁占主导"
+        },
+        {
+          "id": "S2",
+          "name": "FLOPs 分解",
+          "question": "写成 N、D、P 的函数，标出主项阶数"
+        },
+        {
+          "id": "S3",
+          "name": "状态与显存",
+          "question": "KV cache / SSM state / 激活值"
+        },
+        {
+          "id": "S4",
+          "name": "通信与带宽",
+          "question": "并行下的 collective 量级"
+        }
+      ]
+    }
+  ],
+  "layers": {
+    "$comment": "架构部件与实验配置必须分层，避免把训练技巧和硬件优化当成架构改进",
+    "architecture": [
+      "R",
+      "P",
+      "B",
+      "M",
+      "E",
+      "N",
+      "G",
+      "O"
+    ],
+    "training": [
+      "L",
+      "T"
+    ],
+    "inference": [
+      "I"
+    ],
+    "measurement": [
+      "S"
+    ]
+  },
+  "proposal_fields": [
+    {
+      "name": "target_metric",
+      "required": true,
+      "means": "优化哪个指标，必须能在 metrics 里找到"
+    },
+    {
+      "name": "targets_part",
+      "required": true,
+      "means": "打哪个部件，必须存在；按贡献依据与可测目标选择，不能仅凭载荷布尔值准入"
+    },
+    {
+      "name": "level",
+      "required": true,
+      "enum": "level"
+    },
+    {
+      "name": "mechanism",
+      "required": true,
+      "means": "改动如何改变数据流或复杂度"
+    },
+    {
+      "name": "predicted_effect",
+      "required": true,
+      "means": "预测的效果，必须引用 metrics 里的定义或 cost_model 的项"
+    },
+    {
+      "name": "breaks",
+      "required": true,
+      "means": "这个改动会破坏什么"
+    },
+    {
+      "name": "repair",
+      "required": true,
+      "means": "破坏如何补救"
+    },
+    {
+      "name": "min_experiment",
+      "required": true,
+      "means": "最小可证伪实验"
+    },
+    {
+      "name": "kill_criterion",
+      "required": true,
+      "means": "什么结果算否证，必须含判定词与阈值"
+    },
+    {
+      "name": "affected_parts",
+      "required": true,
+      "means": "实际受影响的部件 ID，含所有联动与被修改共享参数的使用者"
+    },
+    {
+      "name": "replacement_scope",
+      "required": true,
+      "means": "独立替换、联动替换或重构"
+    },
+    {
+      "name": "changes_shared_parameters",
+      "required": true,
+      "means": "本提案修改的共享参数组 ID"
+    },
+    {
+      "name": "contribution_rationale",
+      "required": true,
+      "means": "目标部件与可测目标之间的诊断依据；无需先有载荷布尔结论"
+    },
+    {
+      "name": "id",
+      "required": true,
+      "means": "全局唯一提案 ID"
+    },
+    {
+      "name": "numerical_prediction",
+      "required": true,
+      "means": "可执行资源预测；单位与数值必须匹配成本模型"
+    },
+    {
+      "name": "decision_rule",
+      "required": true,
+      "means": "否定条件的结构化表达；指标、工况、种子、聚合和阈值明确"
+    }
+  ],
+  "proposal_arity_note": "提案必填字段以本表和生成 schema 为准；不再使用固定元组数量的称呼。",
+  "evidence": {
+    "$comment": "标签只是指针；真正的证据在 claims[] 里",
+    "tags": {
+      "F": {
+        "name": "paper_fact",
+        "needs": [
+          "claim_ids"
+        ],
+        "means": "本体论文直接陈述或给出的式子"
+      },
+      "U": {
+        "name": "upstream_fact",
+        "needs": [
+          "claim_ids"
+        ],
+        "means": "本体没写，由上游文献补齐"
+      },
+      "D": {
+        "name": "derivation",
+        "needs": [
+          "derivation"
+        ],
+        "means": "从公式或复杂度模型推导得出"
+      },
+      "M": {
+        "name": "missing",
+        "needs": [
+          "search_record"
+        ],
+        "means": "论文与上游都没有，已记录检索失败"
+      }
+    },
+    "claim_types": [
+      "paper_fact",
+      "upstream_fact",
+      "derivation",
+      "measurement",
+      "assumption"
+    ],
+    "support_types": [
+      "direct",
+      "indirect",
+      "contradicted"
+    ],
+    "claim_fields": [
+      "claim_id",
+      "subject",
+      "predicate",
+      "object",
+      "claim_type",
+      "evidence"
+    ],
+    "evidence_item_fields": [
+      "source_id",
+      "locator",
+      "quote",
+      "retrieved_at",
+      "content_hash",
+      "support"
+    ]
+  },
+  "enums": {
+    "level": [
+      "perturbation",
+      "substitution",
+      "rearchitecture"
+    ],
+    "verdict": [
+      "admit",
+      "weaken",
+      "reject"
+    ],
+    "claim_type": [
+      "theorem",
+      "derivation",
+      "missing"
+    ],
+    "stage_status": [
+      "pending",
+      "in_progress",
+      "passed",
+      "blocked",
+      "downgraded"
+    ],
+    "assumption_status": [
+      "satisfied",
+      "violated",
+      "uncertain",
+      "missing"
+    ],
+    "swap_relation": [
+      "interface_compatible",
+      "behaviorally_equivalent",
+      "implementation_equivalent",
+      "unknown"
+    ],
+    "replacement_scope": [
+      "independent",
+      "coupled",
+      "rearchitecture",
+      "unknown"
+    ]
+  },
+  "stages": [
+    {
+      "id": "G0",
+      "name": "取全文定靶",
+      "artifact": "paper + core_architecture",
+      "invariant": "claim_quote 有 F 证据且指到具体位置"
+    },
+    {
+      "id": "G1",
+      "name": "契约与部件表",
+      "artifact": "interface_contract + parts + typed dataflow + importance",
+      "invariant": "部件接口、连接和属性绑定可解析；兼容与行为等价分开记录"
+    },
+    {
+      "id": "G2",
+      "name": "成本模型",
+      "artifact": "cost_model",
+      "invariant": "dominant_term 落在某个 cost_dominant 部件上"
+    },
+    {
+      "id": "G3",
+      "name": "上游补齐",
+      "artifact": "upstream + U 类 claim",
+      "invariant": "每个缺口都能指到 fills_gap"
+    },
+    {
+      "id": "G4",
+      "name": "下游谱系",
+      "artifact": "downstream + claims",
+      "invariant": "至少两条不同改进路线"
+    },
+    {
+      "id": "G5",
+      "name": "跨域迁移",
+      "artifact": "cross_domain",
+      "invariant": "每条有 correspondence/preserved_invariant/verdict"
+    },
+    {
+      "id": "G6",
+      "name": "理论下潜",
+      "artifact": "theory + theorem records",
+      "invariant": "假设逐条标注 satisfied/violated/uncertain"
+    },
+    {
+      "id": "G7",
+      "name": "前沿与提案",
+      "artifact": "proposals",
+      "invariant": "提案字段完整，affected_parts 覆盖联动和被修改共享参数的使用者，贡献依据明确"
+    },
+    {
+      "id": "G8",
+      "name": "组装与校验",
+      "artifact": "report",
+      "invariant": "release 模式下 errors=0 且无 blocking warning"
+    }
+  ],
+  "depth_limits": {
+    "lite": {
+      "parts": 8,
+      "groups": 6,
+      "upstream": 1,
+      "downstream": 2,
+      "proposals": 1,
+      "claims": 8
+    },
+    "standard": {
+      "parts": 8,
+      "groups": 8,
+      "upstream": 2,
+      "downstream": 3,
+      "proposals": 2,
+      "claims": 20
+    },
+    "deep": {
+      "parts": 12,
+      "groups": 10,
+      "upstream": 5,
+      "downstream": 8,
+      "proposals": 3,
+      "claims": 40
+    }
+  },
+  "cross_checks": [
+    {
+      "id": "X1",
+      "rule": "proposal.targets_part 必须存在，affected_parts 覆盖联动关系，贡献依据必须写明；载荷/成本不是唯一准入条件",
+      "severity": "error"
+    },
+    {
+      "id": "X2",
+      "rule": "proposal.target_metric 必须出现在 metrics 或 cost_model 的指标名中",
+      "severity": "error"
+    },
+    {
+      "id": "X3",
+      "rule": "proposal.predicted_effect 必须引用某个 metrics[].id 或 cost_model 项",
+      "severity": "warning"
+    },
+    {
+      "id": "X4",
+      "rule": "upstream[].fills_gap 必须精确指向 gaps[].id 或某个标 M 的部件",
+      "severity": "error"
+    },
+    {
+      "id": "X5",
+      "rule": "theory[].source 必须指向已登记的 claim_id 或可解析的 arXiv/DOI",
+      "severity": "warning"
+    },
+    {
+      "id": "X6",
+      "rule": "parts[].claim_ids 必须都能在 claims[] 里找到",
+      "severity": "error"
+    },
+    {
+      "id": "X7",
+      "rule": "标 F 的部件至少要有一条 support=direct 的 paper_fact claim",
+      "severity": "error"
+    },
+    {
+      "id": "X8",
+      "rule": "cost_model.dominant_part_ids 必须精确指向 cost_dominant=true 的部件",
+      "severity": "error"
+    },
+    {
+      "id": "X9",
+      "rule": "有 upstream 却没有部件标 U",
+      "severity": "warning"
+    },
+    {
+      "id": "X10",
+      "rule": "gaps 非空却没有任何部件标 M",
+      "severity": "warning"
+    },
+    {
+      "id": "X11",
+      "rule": "theory 里没有 claim_type=missing 的条目",
+      "severity": "warning"
+    },
+    {
+      "id": "X12",
+      "rule": "downstream 的 mechanism 两两雷同（视为伪路线多样性）",
+      "severity": "error"
+    },
+    {
+      "id": "X13",
+      "rule": "发布必须 G8/passed，无阻塞；前序 receipts 必须匹配累积产物摘要",
+      "severity": "error"
+    },
+    {
+      "id": "X14",
+      "rule": "claim evidence.source_id 必须登记在 sources，F 必须引用 paper.source_id",
+      "severity": "error"
+    },
+    {
+      "id": "X15",
+      "rule": "claim.subject 必须精确等于引用它的部件 id",
+      "severity": "error"
+    },
+    {
+      "id": "X16",
+      "rule": "v2 必须声明 schema_version 并实际通过 JSON Schema 验证",
+      "severity": "error"
+    },
+    {
+      "id": "X17",
+      "rule": "接口兼容不蕴含行为等价；等价主张必须有同部件 derivation claim，仍需人工审查",
+      "severity": "error"
+    },
+    {
+      "id": "X18",
+      "rule": "数据流端口方向、对象、形状、轴、dtype、单位、测度和状态必须兼容；状态反馈显式延迟",
+      "severity": "error"
+    },
+    {
+      "id": "X19",
+      "rule": "摘要强调、定理依赖、消融和交互分别记录；受控比较必须满足预算、数据、重训及多种子条件",
+      "severity": "error"
+    },
+    {
+      "id": "X20",
+      "rule": "publication 证据发布时必须绑定本地原始/提取快照，重算哈希并精确核对 Unicode 引文区间",
+      "severity": "error"
+    },
+    {
+      "id": "X21",
+      "rule": "成本与预测表达式必须有界执行且单位匹配；否定条件在没有观测时保持 pending",
+      "severity": "error"
+    },
+    {
+      "id": "X22",
+      "rule": "标题弱匹配或同名候选不自动选择，保留 ambiguous 与查询响应快照",
+      "severity": "error"
+    },
+    {
+      "id": "X23",
+      "rule": "Semantic reviews bind actual and transitive proof material; release dispositions cannot endorse unresolved or negative conclusions.",
+      "severity": "error"
+    },
+    {
+      "id": "X24",
+      "rule": "Exact real-scalar rational checks propagate every undefined-domain guard, including zero powers; non-real semantics remain inconclusive.",
+      "severity": "error"
+    },
+    {
+      "id": "X25",
+      "rule": "GitHub 搜索由提案机制和接口需求驱动；匹配论文或关键词不等于官方或可复现",
+      "severity": "error"
+    },
+    {
+      "id": "X26",
+      "rule": "Proof dependencies must be acyclic; conclusions inherit unresolved or negative premise status.",
+      "severity": "error"
+    },
+    {
+      "id": "X27",
+      "rule": "Each retained proposal accounts for implementation exploration with current target binding and actual search receipts or explicit skipped reason.",
+      "severity": "release error"
+    },
+    {
+      "id": "X28",
+      "rule": "Execution receipts bind declared adapter files, cases, observables and current target; passing finite comparisons do not establish universal equivalence.",
+      "severity": "error"
+    },
+    {
+      "id": "X29",
+      "rule": "Exact machine equations must bind the actual natural/formal target, scalar symbols, operator AST and domain; semantic formalization remains a separate review obligation.",
+      "severity": "error"
+    },
+    {
+      "id": "X30",
+      "rule": "Saved experiment outcomes are recomputed from hash-verified raw responses and complete case/repetition observations; passing flags are not trusted.",
+      "severity": "error"
+    },
+    {
+      "id": "X31",
+      "rule": "Retained proposals and endorsed claims require active counter-search receipts; endorsements must resolve candidate assessments grounded in original-source snapshots.",
+      "severity": "release error"
+    },
+    {
+      "id": "X32",
+      "rule": "Evaluation evidence distinguishes simulated/unverified predictions from recorded model runs, exposes prior exposure and binds opaque tasks, prompts and raw response objects.",
+      "severity": "error"
+    }
+  ],
+  "release_policy": {
+    "$comment": "发布模式默认把 blocking severity 一律当失败，避免 errors=0 但内容空洞仍然 exit 0",
+    "fail_on_error": true,
+    "fail_on_warning": [
+      "X3",
+      "X5",
+      "X9",
+      "X10",
+      "X11"
+    ],
+    "fail_on_unverified_refs": true,
+    "missing_ratio_limit": 0.3,
+    "missing_ratio_action": "downgrade",
+    "fail_on_any_warning": true
+  },
+  "architecture_contract": {
+    "definitions": {
+      "importance": {
+        "type": "object",
+        "properties": {
+          "claimed_centrality": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "documented",
+                  "unknown",
+                  "not_claimed"
+                ]
+              },
+              "claim_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              }
+            },
+            "required": [
+              "status",
+              "claim_ids"
+            ],
+            "additionalProperties": false
+          },
+          "theoretical_dependency": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "documented",
+                  "unknown",
+                  "not_claimed"
+                ]
+              },
+              "claim_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              }
+            },
+            "required": [
+              "status",
+              "claim_ids"
+            ],
+            "additionalProperties": false
+          },
+          "ablation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          },
+          "interaction_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          }
+        },
+        "required": [
+          "claimed_centrality",
+          "theoretical_dependency",
+          "ablation_ids",
+          "interaction_ids"
+        ],
+        "additionalProperties": false
+      },
+      "swap_assessment": {
+        "type": "object",
+        "properties": {
+          "candidate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "relation": {
+            "enum": [
+              "interface_compatible",
+              "behaviorally_equivalent",
+              "implementation_equivalent",
+              "unknown"
+            ]
+          },
+          "conditions": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          }
+        },
+        "required": [
+          "candidate",
+          "relation",
+          "conditions",
+          "evidence_claim_ids"
+        ],
+        "additionalProperties": false
+      },
+      "port": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "direction": {
+            "enum": [
+              "input",
+              "output"
+            ]
+          },
+          "object_type": {
+            "enum": [
+              "tensor",
+              "scalar",
+              "sequence",
+              "field",
+              "point_set",
+              "state"
+            ]
+          },
+          "shape": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "axes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          },
+          "dtype": {
+            "enum": [
+              "float16",
+              "bfloat16",
+              "float32",
+              "float64",
+              "int32",
+              "int64",
+              "bool",
+              "complex64",
+              "complex128",
+              "unknown"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "measure": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1
+          },
+          "external": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "owner",
+          "direction",
+          "object_type",
+          "shape",
+          "axes",
+          "dtype",
+          "unit",
+          "measure",
+          "state",
+          "external"
+        ],
+        "additionalProperties": false
+      },
+      "edge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "data",
+              "state"
+            ]
+          },
+          "delay": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "target",
+          "kind",
+          "delay"
+        ],
+        "additionalProperties": false
+      },
+      "ablation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "part_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "control_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "intervention": {
+            "type": "string",
+            "minLength": 1
+          },
+          "controls": {
+            "type": "object",
+            "properties": {
+              "parameter_budget": {
+                "enum": [
+                  "matched",
+                  "unmatched",
+                  "unknown"
+                ]
+              },
+              "training_budget": {
+                "enum": [
+                  "matched",
+                  "unmatched",
+                  "unknown"
+                ]
+              },
+              "tuning_budget": {
+                "enum": [
+                  "matched",
+                  "unmatched",
+                  "unknown"
+                ]
+              },
+              "data_split": {
+                "enum": [
+                  "matched",
+                  "unmatched",
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "parameter_budget",
+              "training_budget",
+              "tuning_budget",
+              "data_split"
+            ],
+            "additionalProperties": false
+          },
+          "retraining": {
+            "enum": [
+              "yes",
+              "no",
+              "unknown"
+            ]
+          },
+          "seeds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "effect": {
+            "type": "object",
+            "properties": {
+              "delta": {
+                "type": "number"
+              },
+              "confidence_interval": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "required": [
+              "delta",
+              "confidence_interval"
+            ],
+            "additionalProperties": false
+          },
+          "attribution": {
+            "enum": [
+              "associational",
+              "controlled_comparison",
+              "inconclusive"
+            ]
+          },
+          "evidence_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "part_ids",
+          "control_id",
+          "metric_id",
+          "intervention",
+          "controls",
+          "retraining",
+          "seeds",
+          "effect",
+          "attribution",
+          "evidence_claim_ids"
+        ],
+        "additionalProperties": false
+      },
+      "interaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "part_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "metric_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ablation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "contrast": {
+            "type": "number"
+          },
+          "confidence_interval": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "attribution": {
+            "enum": [
+              "associational",
+              "controlled_comparison",
+              "inconclusive"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "part_ids",
+          "metric_id",
+          "ablation_ids",
+          "contrast",
+          "confidence_interval",
+          "attribution"
+        ],
+        "additionalProperties": false
+      },
+      "dataflow": {
+        "type": "object",
+        "properties": {
+          "node_parts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/port"
+            },
+            "minItems": 1
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/edge"
+            }
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "part_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "node_parts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                },
+                "role": {
+                  "enum": [
+                    "annotation",
+                    "measurement"
+                  ]
+                }
+              },
+              "required": [
+                "part_id",
+                "node_parts",
+                "role"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "shared_parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true,
+                  "minItems": 2
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "parts",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "coupled_replacements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true,
+                  "minItems": 2
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "parts",
+                "reason"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "node_parts",
+          "ports",
+          "edges",
+          "bindings",
+          "shared_parameters",
+          "coupled_replacements"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "part_properties": {
+      "importance": {
+        "$ref": "#/definitions/importance"
+      },
+      "swap_assessments": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/definitions/swap_assessment"
+        }
+      }
+    },
+    "proposal_properties": {
+      "affected_parts": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true,
+        "minItems": 1
+      },
+      "replacement_scope": {
+        "enum": [
+          "independent",
+          "coupled",
+          "rearchitecture",
+          "unknown"
+        ]
+      },
+      "changes_shared_parameters": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true,
+        "minItems": 0
+      },
+      "contribution_rationale": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "top_properties": {
+      "dataflow": {
+        "$ref": "#/definitions/dataflow"
+      },
+      "ablations": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ablation"
+        }
+      },
+      "interactions": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/interaction"
+        }
+      }
+    }
+  },
+  "verification_contract": {
+    "definitions": {
+      "snapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "text_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "extraction": {
+            "type": "object",
+            "properties": {
+              "tool": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retrieved_at": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "tool",
+              "version",
+              "retrieved_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "source_id",
+          "source_version",
+          "original_path",
+          "original_sha256",
+          "text_path",
+          "text_sha256",
+          "extraction"
+        ],
+        "additionalProperties": false
+      },
+      "calculation": {
+        "type": "object",
+        "properties": {
+          "phase": {
+            "enum": [
+              "training",
+              "prefill",
+              "decode",
+              "forward"
+            ]
+          },
+          "counting_convention": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variables": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "unit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                },
+                "part_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "role": {
+                  "enum": [
+                    "current",
+                    "candidate"
+                  ]
+                },
+                "expression": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expected_value": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "part_id",
+                "role",
+                "expression",
+                "unit",
+                "expected_value"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "dominant_term_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "phase",
+          "counting_convention",
+          "variables",
+          "terms",
+          "dominant_term_ids"
+        ],
+        "additionalProperties": false
+      },
+      "decision_rule": {
+        "type": "object",
+        "properties": {
+          "metric_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "condition_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "aggregation": {
+            "enum": [
+              "mean",
+              "median"
+            ]
+          },
+          "min_seeds": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expression": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operator": {
+            "enum": [
+              "gt",
+              "ge",
+              "lt",
+              "le"
+            ]
+          },
+          "threshold": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "value",
+              "unit"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "metric_id",
+          "condition_id",
+          "aggregation",
+          "min_seeds",
+          "expression",
+          "operator",
+          "threshold"
+        ],
+        "additionalProperties": false
+      },
+      "numerical_prediction": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expected_value": {
+            "type": "number"
+          },
+          "tolerance": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "expression",
+          "unit",
+          "expected_value",
+          "tolerance"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "top_properties": {
+      "evidence_snapshots": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/snapshot"
+        },
+        "minItems": 0
+      }
+    },
+    "evidence_properties": {
+      "snapshot_id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "span": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "proposal_properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "numerical_prediction": {
+        "$ref": "#/definitions/numerical_prediction"
+      },
+      "decision_rule": {
+        "$ref": "#/definitions/decision_rule"
+      }
+    }
+  },
+  "review_contract": {
+    "definitions": {
+      "proof_outline": {
+        "type": "object",
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantifiers": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "statement"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "justification": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "premise_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "id",
+                "statement",
+                "justification",
+                "premise_ids"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "evidence_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "statement",
+          "domain",
+          "quantifiers",
+          "assumptions",
+          "steps",
+          "evidence_claim_ids"
+        ],
+        "additionalProperties": false
+      },
+      "semantic_review": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "enum": [
+              "citation",
+              "mathematics"
+            ]
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "input_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "verdict": {
+            "enum": [
+              "supported",
+              "partial",
+              "contradicted",
+              "insufficient"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "obligations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "enum": [
+                    "satisfied",
+                    "violated",
+                    "unknown"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "status",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          },
+          "counterexample": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "scope_limits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "reviewer": {
+            "type": "object",
+            "properties": {
+              "backend": {
+                "enum": [
+                  "host",
+                  "human",
+                  "openai_compatible"
+                ]
+              },
+              "identity": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "backend",
+              "identity",
+              "model"
+            ],
+            "additionalProperties": false
+          },
+          "reviewed_at": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "kind",
+          "target_id",
+          "input_hash",
+          "verdict",
+          "rationale",
+          "obligations",
+          "evidence_ids",
+          "counterexample",
+          "scope_limits",
+          "reviewer",
+          "reviewed_at"
+        ],
+        "additionalProperties": false
+      },
+      "mathematical_check": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "case": {
+            "type": "object",
+            "properties": {
+              "variables": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0,
+                "maxItems": 6,
+                "uniqueItems": true
+              },
+              "lhs": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rhs": {
+                "type": "string",
+                "minLength": 1
+              },
+              "nonzero": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0,
+                "maxItems": 32
+              },
+              "semantics": {
+                "enum": [
+                  "real_scalar",
+                  "matrix",
+                  "floating_point"
+                ]
+              }
+            },
+            "required": [
+              "variables",
+              "lhs",
+              "rhs",
+              "nonzero"
+            ],
+            "additionalProperties": false
+          },
+          "binding": {
+            "$ref": "#/definitions/mathematical_binding"
+          }
+        },
+        "required": [
+          "id",
+          "target_id",
+          "case",
+          "binding"
+        ],
+        "additionalProperties": false
+      },
+      "comparison_contract": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observables": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "equality": {
+            "enum": [
+              "exact",
+              "approximate"
+            ]
+          },
+          "numeric_semantics": {
+            "enum": [
+              "real_scalar",
+              "matrix",
+              "floating_point"
+            ]
+          },
+          "mode": {
+            "enum": [
+              "training",
+              "inference",
+              "both"
+            ]
+          },
+          "atol": {
+            "type": "number",
+            "minimum": 0
+          },
+          "rtol": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "domain",
+          "observables",
+          "equality",
+          "numeric_semantics",
+          "mode",
+          "atol",
+          "rtol"
+        ],
+        "additionalProperties": false
+      },
+      "publication_conclusion": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "enum": [
+              "citation",
+              "mathematics"
+            ]
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disposition": {
+            "enum": [
+              "endorsed",
+              "open",
+              "conditional",
+              "rejected"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "kind",
+          "target_id",
+          "disposition",
+          "rationale",
+          "conditions"
+        ],
+        "additionalProperties": false
+      },
+      "repository_exploration": {
+        "type": "object",
+        "properties": {
+          "proposal_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "searched",
+              "not_found",
+              "unavailable",
+              "skipped"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "discovery_plan_hashes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "target_snapshot_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "proposal_id",
+          "status",
+          "reason",
+          "discovery_plan_hashes",
+          "target_snapshot_hash"
+        ],
+        "additionalProperties": false
+      },
+      "experiment_receipt_ref": {
+        "type": "object",
+        "properties": {
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "receipt_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "target_id",
+          "receipt_path",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "formal_statement": {
+        "type": "object",
+        "properties": {
+          "natural_statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semantics": {
+            "enum": [
+              "real_scalar"
+            ]
+          },
+          "quantifier": {
+            "enum": [
+              "forall"
+            ]
+          },
+          "relation": {
+            "enum": [
+              "equals"
+            ]
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "meaning": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "enum": [
+                    "real_scalar"
+                  ]
+                }
+              },
+              "required": [
+                "symbol",
+                "meaning",
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0,
+            "maxItems": 6
+          },
+          "nonzero": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "maxItems": 32
+          },
+          "lhs": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rhs": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "natural_statement",
+          "semantics",
+          "quantifier",
+          "relation",
+          "variables",
+          "nonzero",
+          "lhs",
+          "rhs"
+        ],
+        "additionalProperties": false
+      },
+      "mathematical_binding": {
+        "type": "object",
+        "properties": {
+          "target_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "formal_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "case_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "mapping_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "target_hash",
+          "formal_hash",
+          "case_hash",
+          "mapping_note"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "top_properties": {
+      "semantic_reviews": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/semantic_review"
+        },
+        "minItems": 0
+      },
+      "mathematical_checks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/mathematical_check"
+        },
+        "minItems": 0
+      },
+      "repository_discoveries": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "minItems": 0
+      },
+      "publication": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "enum": [
+              "honest_report",
+              "supported_conclusions"
+            ]
+          },
+          "conclusions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/publication_conclusion"
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "mode",
+          "conclusions"
+        ],
+        "additionalProperties": false
+      },
+      "repository_explorations": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/repository_exploration"
+        },
+        "minItems": 0
+      },
+      "implementation_experiments": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/experiment_receipt_ref"
+        },
+        "minItems": 0
+      },
+      "counterevidence_searches": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "minItems": 0
+      }
+    }
+  }
+}

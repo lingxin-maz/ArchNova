@@ -1,0 +1,102 @@
+{
+  "id": "experiment:affine-prefix-demo",
+  "target_id": "proposal:example-affine-scan",
+  "target_snapshot_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "reference": {
+    "path": "reference.py",
+    "sha256": "0fc52e0de101ee47843629dd2adbe1045688f70d2c93f88c25e9658401106734",
+    "dependencies": []
+  },
+  "candidate": {
+    "path": "candidate.py",
+    "sha256": "34469811e401ecff8c15e35d4fe95934c91a73f19d8dbfdc247fba47dfb23df9",
+    "dependencies": []
+  },
+  "cases": [
+    {
+      "id": "empty",
+      "input": {
+        "sequence": [],
+        "gates": [],
+        "initial_state": 1.0
+      },
+      "checks": [
+        "outputs",
+        "state",
+        "gradients"
+      ]
+    },
+    {
+      "id": "one",
+      "input": {
+        "sequence": [
+          2.0
+        ],
+        "gates": [
+          0.5
+        ],
+        "initial_state": -1.0
+      },
+      "checks": [
+        "outputs",
+        "state",
+        "gradients"
+      ]
+    },
+    {
+      "id": "odd",
+      "input": {
+        "sequence": [
+          1.0,
+          -2.0,
+          3.0
+        ],
+        "gates": [
+          0.9,
+          0.0,
+          -0.5
+        ],
+        "initial_state": 0.2
+      },
+      "checks": [
+        "outputs",
+        "state",
+        "gradients"
+      ]
+    },
+    {
+      "id": "non_power_two",
+      "input": {
+        "sequence": [
+          0.2,
+          -0.4,
+          0.8,
+          1.2,
+          -0.3,
+          0.7,
+          0.1
+        ],
+        "gates": [
+          1.0,
+          0.5,
+          -0.2,
+          0.8,
+          0.0,
+          1.1,
+          0.3
+        ],
+        "initial_state": -0.7
+      },
+      "checks": [
+        "outputs",
+        "state",
+        "gradients"
+      ]
+    }
+  ],
+  "atol": 1e-06,
+  "rtol": 1e-05,
+  "timeout_seconds": 3,
+  "total_timeout_seconds": 30,
+  "repetitions": 2
+}
