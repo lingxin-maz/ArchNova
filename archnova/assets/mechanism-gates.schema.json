@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["schema_version", "gates", "admission"],
+  "properties": {
+    "schema_version": {"enum": ["1.0"]},
+    "gates": {"type": "array", "items": {"type": "object", "required": ["gate", "status"]}},
+    "admission": {"type": "object", "required": ["status"]}
+  },
+  "additionalProperties": false
+}
