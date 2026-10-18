@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["schema_version", "fitness", "objectives", "niches", "operator_policy", "component_growth"],
+  "properties": {
+    "schema_version": {"enum": ["1.0"]},
+    "fitness": {"type": "object"},
+    "objectives": {"type": "array", "items": {"type": "object", "required": ["name", "direction"]}},
+    "niches": {"type": "object"},
+    "operator_policy": {"type": "object"},
+    "component_growth": {"type": "object"}
+  },
+  "additionalProperties": false
+}
