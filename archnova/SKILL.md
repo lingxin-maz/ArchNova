@@ -70,7 +70,8 @@ description: 使用宿主 Agent 的模型能力分析神经网络论文与源码
 | 创新探索与证据门 | `references/breakthrough-exploration.md` |
 | 带契约的 GraphIR 组合、编辑和反堆叠验证 | `references/graphir-composition.md` |
 | 元搜索、硬件 Pareto 与零件库生长 | `references/meta-search.md` |`r
-| 组合泛化、共识、可逆性、安全与条件权重准入 | `references/mechanism-gates.md` |
+| 组合泛化、共识、可逆性、安全与条件权重准入 | `references/mechanism-gates.md` |`r
+| 符号回归组件发现、因果、公平、鲁棒与电路模块化 | `references/component-discovery.md` |
 | 设计与替换审查 | `references/operator-design-review.md` |
 | 跨域映射与改进方法 | `references/improvement-ops.md` |
 | 未实现后端能力的设计 | `references/frontier-capability-design.md` |
@@ -78,6 +79,7 @@ description: 使用宿主 Agent 的模型能力分析神经网络论文与源码
 | 可选工具环境与维护测试 | `references/optional-tools.md` |
 
 真实执行参考 runtime 的支持范围以 `references/executable-design-loop.md` 为准，不能用该 runtime 的局限限制宿主 Agent 的架构设计空间，也不能把超出范围的设计当作已经执行。
+
 
 
 

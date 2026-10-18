@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["schema_version", "symbolic", "causal", "fairness_robustness", "circuit_modularity"],
+  "properties": {
+    "schema_version": {"enum": ["1.0"]},
+    "symbolic": {"type": "object"},
+    "causal": {"type": "object"},
+    "fairness_robustness": {"type": "object"},
+    "circuit_modularity": {"type": "object"}
+  },
+  "additionalProperties": false
+}
