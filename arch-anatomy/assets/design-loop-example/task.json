@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "task_id": "task:nonnegative-absolute-demo",
+  "goal": "Approximate y=abs(x) with a small supported graph; demonstrate structural revision, not learned training.",
+  "symbols": {
+    "B": 1
+  },
+  "inputs": [
+    {
+      "name": "x",
+      "shape": [
+        "B",
+        1
+      ],
+      "dtype": "float64",
+      "unit": "1"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "y",
+      "shape": [
+        "B",
+        1
+      ],
+      "dtype": "float64",
+      "unit": "1"
+    }
+  ],
+  "constraints": {
+    "allowed_ops": [
+      "identity",
+      "scale",
+      "relu",
+      "tanh",
+      "linear",
+      "add",
+      "matmul"
+    ],
+    "nonnegative_outputs": true
+  },
+  "budgets": {
+    "max_nodes": 12,
+    "max_parameters": 16,
+    "max_candidates": 3
+  },
+  "objective": {
+    "metric": "mse",
+    "direction": "lower_better",
+    "maximum": 1e-12,
+    "min_improvement": 0.1
+  },
+  "dataset": {
+    "path": "data.json",
+    "sha256": "ba5eaab860ef6ceb929a2d73a57b3bbea08460696e1ae67b5b700f7f192aea16"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "name": "real-source-architecture-development-set",
+  "date": "2026-10-18",
+  "modes": [
+    "paper-only",
+    "code-only",
+    "paper-and-code"
+  ],
+  "cases": 4,
+  "functional_checkpoints": 54,
+  "independent_micro_units": 102,
+  "replacement_judgments": 20,
+  "safe_controls": 4,
+  "negative_or_unresolved_controls": 16,
+  "human_review_status": "pending",
+  "annotation_origin": "Two source-grounded AI reviews with recorded reconciliation; not human gold",
+  "code_sources": [
+    {
+      "id": "gpt",
+      "repo": "karpathy/minGPT",
+      "revision": "37baab71b9abea1b76ab957409a1cc2fbfba8a26",
+      "source_path": "mingpt/model.py",
+      "url": "https://raw.githubusercontent.com/karpathy/minGPT/37baab71b9abea1b76ab957409a1cc2fbfba8a26/mingpt/model.py",
+      "sha256": "3586d4a957722864f7a790689a094478d3ee0b7de34d7456cb635923e4779576",
+      "license_sha256": "f372f582c99dc5b0e8dcf5ca5542183a735365468857ec6416af628490187cc1"
+    },
+    {
+      "id": "resnet",
+      "repo": "pytorch/vision",
+      "revision": "268ddfce8e7938226c4ec8ed23fc7b9c46b97316",
+      "source_path": "torchvision/models/resnet.py",
+      "url": "https://raw.githubusercontent.com/pytorch/vision/268ddfce8e7938226c4ec8ed23fc7b9c46b97316/torchvision/models/resnet.py",
+      "sha256": "9faf2f321fdaf7edbd791aedc6e3610c7edf9c892112cbd75861beae1e9518d1",
+      "license_sha256": "6502f676851cfe25f8af75531dfb32375b7325b73c37e7b43741fa422893e71d"
+    },
+    {
+      "id": "fno",
+      "repo": "neuraloperator/neuraloperator",
+      "revision": "a6648eeeb60fe0837f2d7d021517a945a159a0c8",
+      "source_path": "neuralop/layers/spectral_convolution.py",
+      "url": "https://raw.githubusercontent.com/neuraloperator/neuraloperator/a6648eeeb60fe0837f2d7d021517a945a159a0c8/neuralop/layers/spectral_convolution.py",
+      "sha256": "1ac56bb99d6f7bb0f9694f5eec995e20e762e9e53c0e3cca6af7798f695a9b67",
+      "license_sha256": "5f335b0603acfb1d180bf3117492e2076562075cc9b6353a3b94d5d5bc03ef33"
+    }
+  ],
+  "paper_sources": [
+    {
+      "id": "attention",
+      "url": "https://arxiv.org/pdf/1706.03762",
+      "sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697"
+    },
+    {
+      "id": "resnet",
+      "url": "https://arxiv.org/pdf/1512.03385",
+      "sha256": "1e0651b6810ecba34a3dbc5b5b0209226f889004607c1f203540a48d64e5a93a"
+    },
+    {
+      "id": "fno",
+      "url": "https://arxiv.org/pdf/2010.08895",
+      "sha256": "6cd2645d4a50d1a61a261529b33747c674d78851bdbe6993b0961f81a17dc6f2"
+    }
+  ],
+  "workspace_artifact_dir": "arch-anatomy-workspace/real-architecture-eval",
+  "reproduction": "Fetch exact source URLs and paper snapshots, verify hashes, then prepare frozen packets. Raw papers/source are intentionally outside the installable skill.",
+  "limits": [
+    "Development set exposed during improvement, not untouched holdout.",
+    "Same model family, isolated contexts; no human approval, no training.",
+    "Strict micro scores include taxonomy/evidence-localization disagreement."
+  ]
+}

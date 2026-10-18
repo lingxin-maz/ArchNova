@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "inputs": [
+    {
+      "id": "x",
+      "shape": [
+        "B",
+        1
+      ],
+      "dtype": "float64"
+    }
+  ],
+  "parameters": [
+    {
+      "id": "W",
+      "value": [
+        [
+          1.0
+        ]
+      ],
+      "trainable": false
+    }
+  ],
+  "nodes": [
+    {
+      "id": "affine",
+      "op": "linear",
+      "inputs": [
+        "x"
+      ],
+      "attributes": {},
+      "parameters": {
+        "weight": "W"
+      }
+    }
+  ],
+  "outputs": {
+    "y": "affine"
+  }
+}

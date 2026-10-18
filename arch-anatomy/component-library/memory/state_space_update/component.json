@@ -1,0 +1,198 @@
+{
+  "component_id": "operator:state_space_update",
+  "name": "state space update",
+  "functional_group": "memory",
+  "operator_family": "state_space",
+  "equation": "h[t+1] = A h[t] + B x[t]; y[t] = C h[t+1]",
+  "input_space": "R^(B x N x D)",
+  "output_space": "R^(B x N x D)",
+  "interface": {
+    "input_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "output_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "state": "h:[B,H]",
+    "dtype": "float32",
+    "layout": "BND"
+  },
+  "parameters": [
+    "A:[H,H]",
+    "B:[H,D]",
+    "C:[D,H]"
+  ],
+  "invariants": [
+    "sequence_length_preserved"
+  ],
+  "symmetry": [],
+  "stability_conditions": [
+    "Finite inputs and parameters; validate numerical behavior in target precision."
+  ],
+  "replacement_candidates": [],
+  "tags": [
+    "memory",
+    "streaming",
+    "state",
+    "状态空间",
+    "流式"
+  ],
+  "verification_refs": [],
+  "complexity": {
+    "time": "O(B N H^2 + B N H D)",
+    "memory": "O(B H)",
+    "assumptions": [
+      "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+    ]
+  },
+  "discretization": "finite-dimensional tensor sequence",
+  "parallelism": "implementation dependent",
+  "provenance": [
+    {
+      "kind": "proposed",
+      "ref": "equations.md",
+      "locator": "Design seed; no paper or implementation has been verified.",
+      "id": "ev:seed"
+    }
+  ],
+  "implementation_refs": [],
+  "verification_status": "unverified",
+  "schema_version": "1.1",
+  "ports": [
+    {
+      "id": "x",
+      "owner": "operator:state_space_update",
+      "direction": "input",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "y",
+      "owner": "operator:state_space_update",
+      "direction": "output",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "h",
+      "owner": "operator:state_space_update",
+      "direction": "input",
+      "object_type": "state",
+      "shape": [
+        "B",
+        "H"
+      ],
+      "axes": [
+        "batch",
+        "hidden"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "ssm_hidden",
+      "external": true
+    },
+    {
+      "id": "h_next",
+      "owner": "operator:state_space_update",
+      "direction": "output",
+      "object_type": "state",
+      "shape": [
+        "B",
+        "H"
+      ],
+      "axes": [
+        "batch",
+        "hidden"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "ssm_hidden",
+      "external": true
+    }
+  ],
+  "parameter_specs": [
+    {
+      "id": "A",
+      "shape": [
+        "H",
+        "H"
+      ],
+      "shared_with": [],
+      "constraint": "A stability conditions must be checked"
+    },
+    {
+      "id": "B",
+      "shape": [
+        "H",
+        "D"
+      ],
+      "shared_with": [],
+      "constraint": "dense finite weights"
+    },
+    {
+      "id": "C",
+      "shape": [
+        "D",
+        "H"
+      ],
+      "shared_with": [],
+      "constraint": "dense finite weights"
+    }
+  ],
+  "verification": [],
+  "field_evidence": {
+    "/equation": [
+      "ev:seed"
+    ],
+    "/ports": [
+      "ev:seed"
+    ],
+    "/state_contract": [
+      "ev:seed"
+    ],
+    "/parameter_specs": [
+      "ev:seed"
+    ]
+  },
+  "state_contract": {
+    "kind": "recurrent",
+    "initialization": "h0 zeros or caller-supplied; select explicitly",
+    "update_equation": "h_next=A h+B x; y=C h_next",
+    "reset": "Reset h between independent sequences",
+    "gradient_policy": "BPTT or explicit truncation policy; not tested"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "component_id": "operator:softmax_attention",
+  "name": "softmax attention",
+  "functional_group": "global_mixing",
+  "operator_family": "kernel_attention",
+  "equation": "softmax(Q K^T / sqrt(d_k)) V",
+  "input_space": "R^(B x N x D)",
+  "output_space": "R^(B x N x D)",
+  "interface": {
+    "input_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "output_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "state": "none",
+    "dtype": "float32",
+    "layout": "BND"
+  },
+  "parameters": [
+    "Q,K,V supplied; projection weights outside this component"
+  ],
+  "invariants": [
+    "sequence_length_preserved"
+  ],
+  "symmetry": [],
+  "stability_conditions": [
+    "Finite inputs and parameters; validate numerical behavior in target precision."
+  ],
+  "replacement_candidates": [],
+  "tags": [
+    "attention",
+    "global",
+    "mixing",
+    "注意力",
+    "全局混合"
+  ],
+  "verification_refs": [],
+  "complexity": {
+    "time": "O(B N^2 D)",
+    "memory": "O(B N^2)",
+    "assumptions": [
+      "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+    ]
+  },
+  "discretization": "finite-dimensional tensor sequence",
+  "parallelism": "implementation dependent",
+  "provenance": [
+    {
+      "kind": "proposed",
+      "ref": "equations.md",
+      "locator": "Design seed; no paper or implementation has been verified.",
+      "id": "ev:seed"
+    }
+  ],
+  "implementation_refs": [],
+  "verification_status": "unverified",
+  "schema_version": "1.1",
+  "ports": [
+    {
+      "id": "Q",
+      "owner": "operator:softmax_attention",
+      "direction": "input",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "K",
+      "owner": "operator:softmax_attention",
+      "direction": "input",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "V",
+      "owner": "operator:softmax_attention",
+      "direction": "input",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "y",
+      "owner": "operator:softmax_attention",
+      "direction": "output",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    }
+  ],
+  "parameter_specs": [],
+  "verification": [],
+  "field_evidence": {
+    "/equation": [
+      "ev:seed"
+    ],
+    "/ports": [
+      "ev:seed"
+    ],
+    "/state_contract": [
+      "ev:seed"
+    ],
+    "/parameter_specs": [
+      "ev:seed"
+    ]
+  },
+  "state_contract": {
+    "kind": "stateless",
+    "initialization": "none",
+    "update_equation": "none",
+    "reset": "none",
+    "gradient_policy": "Autodiff through explicit stateless formula; not tested"
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "system_id",
+    "family",
+    "components",
+    "views",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "system_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+    },
+    "family": {
+      "enum": [
+        "llm",
+        "cnn",
+        "rnn",
+        "state_space",
+        "diffusion",
+        "gnn",
+        "neural_operator",
+        "multimodal",
+        "hybrid",
+        "custom"
+      ]
+    },
+    "task": {
+      "type": "string"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "role",
+          "network_ontology",
+          "parts",
+          "inputs",
+          "outputs",
+          "states",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "network_body",
+              "inference",
+              "training",
+              "preprocess",
+              "distributed",
+              "data",
+              "evaluation",
+              "custom"
+            ]
+          },
+          "network_ontology": {
+            "type": "boolean"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "kind",
+                "status"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "observed",
+                    "derived",
+                    "proposed",
+                    "unknown"
+                  ]
+                },
+                "details": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "interfaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "to",
+                "kind",
+                "contract"
+              ],
+              "properties": {
+                "to": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "contract": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "views": {
+      "type": "object",
+      "required": [
+        "inference",
+        "training",
+        "preprocess",
+        "distributed"
+      ],
+      "properties": {
+        "inference": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "training": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preprocess": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "distributed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "source",
+          "observed_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "paper",
+              "code",
+              "runtime",
+              "derived",
+              "proposed"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scope_limits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "state_transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "phase",
+          "reads",
+          "writes"
+        ],
+        "properties": {
+          "phase": {
+            "type": "string"
+          },
+          "reads": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "writes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "condition": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "lifecycle": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "phase",
+          "component_ids"
+        ],
+        "properties": {
+          "phase": {
+            "type": "string"
+          },
+          "component_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

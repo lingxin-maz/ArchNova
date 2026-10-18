@@ -1,24 +1,29 @@
-# Runtime and local artifacts
-arch-anatomy-workspace/
-.archive/
-.graphflow/
-*.pdf
+# Generated releases and local installations
+/dist/
+/release/
+/.codex/
+*.skill
 *.skill.manifest.json
+
+# Local research and workbench artifacts
+/arch-anatomy-workspace/
+/.archive/
+/.graphflow/
+*.log
+*.tmp
+
+# Python and dependencies
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .venv/
 venv/
 node_modules/
 
-# Local secrets and credentials
+# Credentials
 .env
 .env.*
 *.pem
 *.key
 id_rsa
 id_ed25519
-
-# Temporary build output
-*.tmp
-*.log

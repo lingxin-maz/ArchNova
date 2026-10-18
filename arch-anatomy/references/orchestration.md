@@ -21,4 +21,8 @@ python scripts/orchestrator.py submit run/state.json --response run/host-respons
 python scripts/orchestrator.py next run/state.next.json -o run/next-request.json
 ```
 
-A host response must preserve `task_id`, and should preserve the task's `input_hash`; stale or unknown responses are rejected. The scheduler never treats agent output as instructions and never executes candidate repository code. `semantic_review.py`, `github_repos.py`, `counterevidence.py` and `checkpoint_anatomy.py` remain the domain validators; the orchestrator only routes their tasks and records their receipts.
+A host response must preserve `task_id`, and must preserve a hashed task's `input_hash`; stale or unknown responses are rejected. The scheduler never treats agent output as instructions and never executes candidate repository code. `semantic_review.py`, `github_repos.py`, `counterevidence.py` and `checkpoint_anatomy.py` remain the domain validators; the orchestrator only routes their tasks and records their receipts.
+
+For mode-router tasks, response_schema is a real JSON Schema. The three contracted architecture roles require validated JSON artifacts. Completion verifies predecessor readiness, exact input hash, artifact type and schema. Resumption rejects changed completed artifacts. Dependency artifact paths and hashes are returned in next requests. See operator-design-review.md. A completed replacement review may still be unresolved or rejected; downstream work must respect its verdict.
+
+Target-bound runs use --task-spec. Every task revalidates the frozen goal/data; review binds full operators/dataflow/runtime_ir/target hash. Prototype completion verifies actual generated files and exact reviewed model. Experiment completion replays the design-loop result and confirms its initial model matches the upstream prototype. Failed empirical outcomes remain explicit result states. See executable-design-loop.md.

@@ -1,23 +1,69 @@
 # arch-anatomy
 
-Arch Anatomy 是一个面向论文和代码项目的可验证架构分析 skill。它支持论文材料导入、代码项目索引、多模态图像任务、多 Agent 调度、引文支撑检查、数学目标绑定、GitHub 实现检索、主动反证检索、实验收据回放和发布门检查。
+面向神经网络的架构分析、组件检索、功能导向设计与证据验证 skill。
 
-## 安装到 Codex
-
-解压 `dist/arch-anatomy-codex-skill.zip` 到 `%USERPROFILE%\\.codex\\skills`，得到：
+## 项目结构
 
 ```text
-.codex/skills/arch-anatomy/SKILL.md
+arch-anatomy/
+  SKILL.md             技能入口
+  requirements.txt     Python 依赖
+  ontology.json        架构本体
+  assets/              Schema 与示例
+  component-library/   组件素材库
+  references/          使用协议与设计参考
+  scripts/             分析、设计、验证和构建工具
+  tests/               回归测试
+  evals/               评测配置
+LICENSE
+README.md
 ```
 
-也可以直接复制 `dist/arch-anatomy/` 到 `.codex/skills/arch-anatomy/`。
+## 安装
 
-## 开发验证
+将 `arch-anatomy/` 文件夹复制到所需位置的 `.codex/skills/arch-anatomy/`。
+安装 Python 工具依赖：
 
-```powershell
-python -B -m unittest discover -s arch-anatomy/tests -p 'test*.py'
+```shell
+python -m pip install -r arch-anatomy/requirements.txt
+```
+
+PyTorch/JAX 为可选依赖；基础测试与参考运行时不要求安装它们。
+
+## 主要入口
+
+- 架构设计：`scripts/architecture_design.py`
+- 模型诊断与训练策略建议：`scripts/model_diagnostics.py`
+- 网络系统 profile：`scripts/network_system.py`
+- 候选探索：`scripts/breakthrough_explorer.py`
+- 设计流水线：`scripts/innovation_pipeline.py`
+- 实验与回放：`scripts/design_loop.py`
+- 文献候选检索：`scripts/research_watch.py`
+
+以上路径相对于 `arch-anatomy/`。具体参数通过各脚本 `--help` 查看；使用流程见 `SKILL.md` 和 `references/`。
+
+## 验证
+
+```shell
+python -B -m unittest discover -s arch-anatomy/tests
 python arch-anatomy/scripts/build_ontology.py --check
-python C:/Users/mazjz/.codex/skills/.system/skill-creator/scripts/quick_validate.py arch-anatomy
+python arch-anatomy/scripts/capability_audit.py arch-anatomy
 ```
 
-当前 skill 源码位于 `arch-anatomy/`；可安装分发物位于 `dist/`。
+## 构建安装包
+
+```shell
+python arch-anatomy/scripts/build_codex_skill.py
+```
+
+生成 `dist/arch-anatomy/` 和 `dist/arch-anatomy-codex-skill.zip`。生成物不纳入源码仓库，可作为 GitHub Release 附件发布。
+
+## 能力边界
+
+组件组合、模型诊断和训练策略包含规则与设计假设；生成产物不代表科学突破或已完成模型训练。参考运行时、框架支持和实验限制见 `references/executable-design-loop.md`。结构检查通过不等于泛化、GPU 性能或新架构优越性得到证明。
+
+真实论文评测只在仓库保留配置与方法；原始论文、第三方源码、历史输出和人工待审材料不包含在源码包中，不能据此报告人工金标准分数。
+
+## 许可证
+
+见 `LICENSE`。

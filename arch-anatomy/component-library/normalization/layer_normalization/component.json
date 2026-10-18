@@ -1,0 +1,146 @@
+{
+  "component_id": "operator:layer_normalization",
+  "name": "layer normalization",
+  "functional_group": "normalization",
+  "operator_family": "normalization",
+  "equation": "y = gamma * (x-mean_D(x))/sqrt(var_D(x)+epsilon) + beta",
+  "input_space": "R^(B x N x D)",
+  "output_space": "R^(B x N x D)",
+  "interface": {
+    "input_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "output_shape": [
+      "B",
+      "N",
+      "D"
+    ],
+    "state": "none",
+    "dtype": "float32",
+    "layout": "BND"
+  },
+  "parameters": [
+    "gamma:[D]",
+    "beta:[D]",
+    "epsilon>0"
+  ],
+  "invariants": [
+    "sequence_length_preserved"
+  ],
+  "symmetry": [],
+  "stability_conditions": [
+    "Finite inputs and parameters; validate numerical behavior in target precision."
+  ],
+  "replacement_candidates": [],
+  "tags": [
+    "normalization",
+    "归一化"
+  ],
+  "verification_refs": [],
+  "complexity": {
+    "time": "O(B N D)",
+    "memory": "O(B N D)",
+    "assumptions": [
+      "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+    ]
+  },
+  "discretization": "finite-dimensional tensor sequence",
+  "parallelism": "implementation dependent",
+  "provenance": [
+    {
+      "kind": "proposed",
+      "ref": "equations.md",
+      "locator": "Design seed; no paper or implementation has been verified.",
+      "id": "ev:seed"
+    }
+  ],
+  "implementation_refs": [],
+  "verification_status": "unverified",
+  "schema_version": "1.1",
+  "ports": [
+    {
+      "id": "x",
+      "owner": "operator:layer_normalization",
+      "direction": "input",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    },
+    {
+      "id": "y",
+      "owner": "operator:layer_normalization",
+      "direction": "output",
+      "object_type": "tensor",
+      "shape": [
+        "B",
+        "N",
+        "D"
+      ],
+      "axes": [
+        "batch",
+        "sequence",
+        "feature"
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "measure": "counting",
+      "state": "none",
+      "external": true
+    }
+  ],
+  "parameter_specs": [
+    {
+      "id": "gamma",
+      "shape": [
+        "D"
+      ],
+      "shared_with": [],
+      "constraint": "finite"
+    },
+    {
+      "id": "beta",
+      "shape": [
+        "D"
+      ],
+      "shared_with": [],
+      "constraint": "finite"
+    }
+  ],
+  "verification": [],
+  "field_evidence": {
+    "/equation": [
+      "ev:seed"
+    ],
+    "/ports": [
+      "ev:seed"
+    ],
+    "/state_contract": [
+      "ev:seed"
+    ],
+    "/parameter_specs": [
+      "ev:seed"
+    ]
+  },
+  "state_contract": {
+    "kind": "stateless",
+    "initialization": "none",
+    "update_equation": "none",
+    "reset": "none",
+    "gradient_policy": "Autodiff through explicit stateless formula; not tested"
+  }
+}

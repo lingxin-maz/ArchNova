@@ -1,0 +1,146 @@
+[
+  {
+    "id": "development-0",
+    "split": "development",
+    "inputs": {
+      "x": [
+        [
+          -2.0
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          2.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "development-1",
+    "split": "development",
+    "inputs": {
+      "x": [
+        [
+          -0.5
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          0.5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "development-2",
+    "split": "development",
+    "inputs": {
+      "x": [
+        [
+          1.0
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          1.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "development-3",
+    "split": "development",
+    "inputs": {
+      "x": [
+        [
+          3.0
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          3.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "holdout-0",
+    "split": "holdout",
+    "inputs": {
+      "x": [
+        [
+          -3.0
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          3.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "holdout-1",
+    "split": "holdout",
+    "inputs": {
+      "x": [
+        [
+          -0.25
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          0.25
+        ]
+      ]
+    }
+  },
+  {
+    "id": "holdout-2",
+    "split": "holdout",
+    "inputs": {
+      "x": [
+        [
+          0.5
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          0.5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "holdout-3",
+    "split": "holdout",
+    "inputs": {
+      "x": [
+        [
+          2.0
+        ]
+      ]
+    },
+    "targets": {
+      "y": [
+        [
+          2.0
+        ]
+      ]
+    }
+  }
+]

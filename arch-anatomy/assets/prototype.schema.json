@@ -1,0 +1,165 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "artifact_kind": {
+      "enum": [
+        "prototype"
+      ]
+    },
+    "runtime": {
+      "enum": [
+        "python_stdlib_rank2_v1",
+        "python_stdlib_rank1_4_v2"
+      ]
+    },
+    "task_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "model_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "task_input_hash": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "upstream_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "task_id",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "files": {
+      "type": "object",
+      "properties": {
+        "adapter.py": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "engine.py": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "model.json": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "task_spec.json": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "dataset.json": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "tensor_runtime.py": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "adapter.py",
+        "engine.py",
+        "tensor_runtime.py",
+        "model.json",
+        "task_spec.json",
+        "dataset.json"
+      ],
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "parameters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scalar_operation_proxy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shapes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "semantic_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "nodes",
+        "parameters",
+        "scalar_operation_proxy",
+        "shapes",
+        "semantic_hash",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "scope_limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "runtime",
+    "task_hash",
+    "model_hash",
+    "task_input_hash",
+    "upstream_artifacts",
+    "files",
+    "summary",
+    "scope_limits"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-04/schema#"
+}

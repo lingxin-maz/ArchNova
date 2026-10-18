@@ -1,0 +1,345 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "symbols": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 64
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+          },
+          "shape": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 64
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                }
+              ]
+            }
+          },
+          "dtype": {
+            "enum": [
+              "float64"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "shape",
+          "dtype",
+          "unit"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+          },
+          "shape": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 64
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                }
+              ]
+            }
+          },
+          "dtype": {
+            "enum": [
+              "float64"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "shape",
+          "dtype",
+          "unit"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "allowed_ops": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "identity",
+              "scale",
+              "relu",
+              "tanh",
+              "linear",
+              "add",
+              "matmul",
+              "transpose",
+              "softmax",
+              "reshape",
+              "concat",
+              "layernorm"
+            ]
+          }
+        },
+        "nonnegative_outputs": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "allowed_ops",
+        "nonnegative_outputs"
+      ],
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "max_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "max_parameters": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16384
+        },
+        "max_candidates": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "required": [
+        "max_nodes",
+        "max_parameters",
+        "max_candidates"
+      ],
+      "additionalProperties": false
+    },
+    "objective": {
+      "type": "object",
+      "properties": {
+        "metric": {
+          "enum": [
+            "mse",
+            "max_abs_error"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "lower_better"
+          ]
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_improvement": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "metric",
+        "direction",
+        "maximum",
+        "min_improvement"
+      ],
+      "additionalProperties": false
+    },
+    "dataset": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "framework": {
+      "enum": [
+        "reference_ir",
+        "pytorch",
+        "jax"
+      ]
+    },
+    "training": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "epochs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "learning_rate": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMinimum": true,
+          "maximum": 1
+        },
+        "trainable_parameter_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "enabled",
+        "epochs",
+        "learning_rate",
+        "trainable_parameter_ids"
+      ],
+      "additionalProperties": false
+    },
+    "benchmark": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "cpu",
+              "cuda"
+            ]
+          }
+        },
+        "repetitions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "warmup": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "devices",
+        "repetitions",
+        "warmup"
+      ],
+      "additionalProperties": false
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "relu",
+              "absolute"
+            ]
+          }
+        },
+        "max_candidates": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "required": [
+        "rules",
+        "max_candidates"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "task_id",
+    "goal",
+    "symbols",
+    "inputs",
+    "outputs",
+    "constraints",
+    "budgets",
+    "objective",
+    "dataset"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-04/schema#"
+}

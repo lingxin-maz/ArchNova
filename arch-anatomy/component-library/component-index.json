@@ -1,0 +1,678 @@
+{
+  "schema_version": "1.0",
+  "components": [
+    {
+      "path": "global_mixing/softmax_attention/component.json",
+      "sha256": "421027b59a2f5949fa386dcd1787649d02c455b818b83d9d89f75ac8f2091ade",
+      "component": {
+        "component_id": "operator:softmax_attention",
+        "name": "softmax attention",
+        "functional_group": "global_mixing",
+        "operator_family": "kernel_attention",
+        "equation": "softmax(Q K^T / sqrt(d_k)) V",
+        "input_space": "R^(B x N x D)",
+        "output_space": "R^(B x N x D)",
+        "interface": {
+          "input_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "output_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "state": "none",
+          "dtype": "float32",
+          "layout": "BND"
+        },
+        "parameters": [
+          "Q,K,V supplied; projection weights outside this component"
+        ],
+        "invariants": [
+          "sequence_length_preserved"
+        ],
+        "symmetry": [],
+        "stability_conditions": [
+          "Finite inputs and parameters; validate numerical behavior in target precision."
+        ],
+        "replacement_candidates": [],
+        "tags": [
+          "attention",
+          "global",
+          "mixing",
+          "注意力",
+          "全局混合"
+        ],
+        "verification_refs": [],
+        "complexity": {
+          "time": "O(B N^2 D)",
+          "memory": "O(B N^2)",
+          "assumptions": [
+            "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+          ]
+        },
+        "discretization": "finite-dimensional tensor sequence",
+        "parallelism": "implementation dependent",
+        "provenance": [
+          {
+            "kind": "proposed",
+            "ref": "equations.md",
+            "locator": "Design seed; no paper or implementation has been verified.",
+            "id": "ev:seed"
+          }
+        ],
+        "implementation_refs": [],
+        "verification_status": "unverified",
+        "schema_version": "1.1",
+        "ports": [
+          {
+            "id": "Q",
+            "owner": "operator:softmax_attention",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "K",
+            "owner": "operator:softmax_attention",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "V",
+            "owner": "operator:softmax_attention",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "y",
+            "owner": "operator:softmax_attention",
+            "direction": "output",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          }
+        ],
+        "parameter_specs": [],
+        "verification": [],
+        "field_evidence": {
+          "/equation": [
+            "ev:seed"
+          ],
+          "/ports": [
+            "ev:seed"
+          ],
+          "/state_contract": [
+            "ev:seed"
+          ],
+          "/parameter_specs": [
+            "ev:seed"
+          ]
+        },
+        "state_contract": {
+          "kind": "stateless",
+          "initialization": "none",
+          "update_equation": "none",
+          "reset": "none",
+          "gradient_policy": "Autodiff through explicit stateless formula; not tested"
+        }
+      }
+    },
+    {
+      "path": "local_mixing/convolution/component.json",
+      "sha256": "cf3fcd31b4f611f70e21984c989c80b0341a04b65522f2af2ffa0f8c8b5652fd",
+      "component": {
+        "component_id": "operator:convolution",
+        "name": "convolution",
+        "functional_group": "local_mixing",
+        "operator_family": "convolution",
+        "equation": "y[i] = sum_j W[j] x[i+j]",
+        "input_space": "R^(B x N x D)",
+        "output_space": "R^(B x N x D)",
+        "interface": {
+          "input_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "output_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "state": "none",
+          "dtype": "float32",
+          "layout": "BND"
+        },
+        "parameters": [
+          "W:[K,D,D]"
+        ],
+        "invariants": [
+          "sequence_length_preserved"
+        ],
+        "symmetry": [],
+        "stability_conditions": [
+          "Finite inputs and parameters; validate numerical behavior in target precision."
+        ],
+        "replacement_candidates": [],
+        "tags": [
+          "convolution",
+          "local",
+          "mixing",
+          "卷积"
+        ],
+        "verification_refs": [],
+        "complexity": {
+          "time": "O(B N K D^2)",
+          "memory": "O(B N D)",
+          "assumptions": [
+            "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+          ]
+        },
+        "discretization": "finite-dimensional tensor sequence",
+        "parallelism": "implementation dependent",
+        "provenance": [
+          {
+            "kind": "proposed",
+            "ref": "equations.md",
+            "locator": "Design seed; no paper or implementation has been verified.",
+            "id": "ev:seed"
+          }
+        ],
+        "implementation_refs": [],
+        "verification_status": "unverified",
+        "schema_version": "1.1",
+        "ports": [
+          {
+            "id": "x",
+            "owner": "operator:convolution",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "y",
+            "owner": "operator:convolution",
+            "direction": "output",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          }
+        ],
+        "parameter_specs": [
+          {
+            "id": "W",
+            "shape": [
+              "K",
+              "D",
+              "D"
+            ],
+            "shared_with": [],
+            "constraint": "shared across sequence locations; same-length padding"
+          }
+        ],
+        "verification": [],
+        "field_evidence": {
+          "/equation": [
+            "ev:seed"
+          ],
+          "/ports": [
+            "ev:seed"
+          ],
+          "/state_contract": [
+            "ev:seed"
+          ],
+          "/parameter_specs": [
+            "ev:seed"
+          ]
+        },
+        "state_contract": {
+          "kind": "stateless",
+          "initialization": "none",
+          "update_equation": "none",
+          "reset": "none",
+          "gradient_policy": "Autodiff through explicit stateless formula; not tested"
+        }
+      }
+    },
+    {
+      "path": "memory/state_space_update/component.json",
+      "sha256": "73d68a78dd07d7629e0296daaa73b71287f1cc094e3c7e96752b26d8bf26fb70",
+      "component": {
+        "component_id": "operator:state_space_update",
+        "name": "state space update",
+        "functional_group": "memory",
+        "operator_family": "state_space",
+        "equation": "h[t+1] = A h[t] + B x[t]; y[t] = C h[t+1]",
+        "input_space": "R^(B x N x D)",
+        "output_space": "R^(B x N x D)",
+        "interface": {
+          "input_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "output_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "state": "h:[B,H]",
+          "dtype": "float32",
+          "layout": "BND"
+        },
+        "parameters": [
+          "A:[H,H]",
+          "B:[H,D]",
+          "C:[D,H]"
+        ],
+        "invariants": [
+          "sequence_length_preserved"
+        ],
+        "symmetry": [],
+        "stability_conditions": [
+          "Finite inputs and parameters; validate numerical behavior in target precision."
+        ],
+        "replacement_candidates": [],
+        "tags": [
+          "memory",
+          "streaming",
+          "state",
+          "状态空间",
+          "流式"
+        ],
+        "verification_refs": [],
+        "complexity": {
+          "time": "O(B N H^2 + B N H D)",
+          "memory": "O(B H)",
+          "assumptions": [
+            "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+          ]
+        },
+        "discretization": "finite-dimensional tensor sequence",
+        "parallelism": "implementation dependent",
+        "provenance": [
+          {
+            "kind": "proposed",
+            "ref": "equations.md",
+            "locator": "Design seed; no paper or implementation has been verified.",
+            "id": "ev:seed"
+          }
+        ],
+        "implementation_refs": [],
+        "verification_status": "unverified",
+        "schema_version": "1.1",
+        "ports": [
+          {
+            "id": "x",
+            "owner": "operator:state_space_update",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "y",
+            "owner": "operator:state_space_update",
+            "direction": "output",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "h",
+            "owner": "operator:state_space_update",
+            "direction": "input",
+            "object_type": "state",
+            "shape": [
+              "B",
+              "H"
+            ],
+            "axes": [
+              "batch",
+              "hidden"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "ssm_hidden",
+            "external": true
+          },
+          {
+            "id": "h_next",
+            "owner": "operator:state_space_update",
+            "direction": "output",
+            "object_type": "state",
+            "shape": [
+              "B",
+              "H"
+            ],
+            "axes": [
+              "batch",
+              "hidden"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "ssm_hidden",
+            "external": true
+          }
+        ],
+        "parameter_specs": [
+          {
+            "id": "A",
+            "shape": [
+              "H",
+              "H"
+            ],
+            "shared_with": [],
+            "constraint": "A stability conditions must be checked"
+          },
+          {
+            "id": "B",
+            "shape": [
+              "H",
+              "D"
+            ],
+            "shared_with": [],
+            "constraint": "dense finite weights"
+          },
+          {
+            "id": "C",
+            "shape": [
+              "D",
+              "H"
+            ],
+            "shared_with": [],
+            "constraint": "dense finite weights"
+          }
+        ],
+        "verification": [],
+        "field_evidence": {
+          "/equation": [
+            "ev:seed"
+          ],
+          "/ports": [
+            "ev:seed"
+          ],
+          "/state_contract": [
+            "ev:seed"
+          ],
+          "/parameter_specs": [
+            "ev:seed"
+          ]
+        },
+        "state_contract": {
+          "kind": "recurrent",
+          "initialization": "h0 zeros or caller-supplied; select explicitly",
+          "update_equation": "h_next=A h+B x; y=C h_next",
+          "reset": "Reset h between independent sequences",
+          "gradient_policy": "BPTT or explicit truncation policy; not tested"
+        }
+      }
+    },
+    {
+      "path": "normalization/layer_normalization/component.json",
+      "sha256": "d7941e6d4d15d9ee162ddff03673e6000337bb3e00bbe99cf791c2fa985ccb46",
+      "component": {
+        "component_id": "operator:layer_normalization",
+        "name": "layer normalization",
+        "functional_group": "normalization",
+        "operator_family": "normalization",
+        "equation": "y = gamma * (x-mean_D(x))/sqrt(var_D(x)+epsilon) + beta",
+        "input_space": "R^(B x N x D)",
+        "output_space": "R^(B x N x D)",
+        "interface": {
+          "input_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "output_shape": [
+            "B",
+            "N",
+            "D"
+          ],
+          "state": "none",
+          "dtype": "float32",
+          "layout": "BND"
+        },
+        "parameters": [
+          "gamma:[D]",
+          "beta:[D]",
+          "epsilon>0"
+        ],
+        "invariants": [
+          "sequence_length_preserved"
+        ],
+        "symmetry": [],
+        "stability_conditions": [
+          "Finite inputs and parameters; validate numerical behavior in target precision."
+        ],
+        "replacement_candidates": [],
+        "tags": [
+          "normalization",
+          "归一化"
+        ],
+        "verification_refs": [],
+        "complexity": {
+          "time": "O(B N D)",
+          "memory": "O(B N D)",
+          "assumptions": [
+            "Dense reference computation; dimensions and algorithms as described in equations.md. No measured performance."
+          ]
+        },
+        "discretization": "finite-dimensional tensor sequence",
+        "parallelism": "implementation dependent",
+        "provenance": [
+          {
+            "kind": "proposed",
+            "ref": "equations.md",
+            "locator": "Design seed; no paper or implementation has been verified.",
+            "id": "ev:seed"
+          }
+        ],
+        "implementation_refs": [],
+        "verification_status": "unverified",
+        "schema_version": "1.1",
+        "ports": [
+          {
+            "id": "x",
+            "owner": "operator:layer_normalization",
+            "direction": "input",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          },
+          {
+            "id": "y",
+            "owner": "operator:layer_normalization",
+            "direction": "output",
+            "object_type": "tensor",
+            "shape": [
+              "B",
+              "N",
+              "D"
+            ],
+            "axes": [
+              "batch",
+              "sequence",
+              "feature"
+            ],
+            "dtype": "float32",
+            "unit": "1",
+            "measure": "counting",
+            "state": "none",
+            "external": true
+          }
+        ],
+        "parameter_specs": [
+          {
+            "id": "gamma",
+            "shape": [
+              "D"
+            ],
+            "shared_with": [],
+            "constraint": "finite"
+          },
+          {
+            "id": "beta",
+            "shape": [
+              "D"
+            ],
+            "shared_with": [],
+            "constraint": "finite"
+          }
+        ],
+        "verification": [],
+        "field_evidence": {
+          "/equation": [
+            "ev:seed"
+          ],
+          "/ports": [
+            "ev:seed"
+          ],
+          "/state_contract": [
+            "ev:seed"
+          ],
+          "/parameter_specs": [
+            "ev:seed"
+          ]
+        },
+        "state_contract": {
+          "kind": "stateless",
+          "initialization": "none",
+          "update_equation": "none",
+          "reset": "none",
+          "gradient_policy": "Autodiff through explicit stateless formula; not tested"
+        }
+      }
+    }
+  ],
+  "index_hash": "3a97c9d0338be0afbc260c52d04fdaee16061c63b112589e7c8f7b101b573961"
+}

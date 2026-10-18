@@ -1,11 +1,33 @@
 ---
 name: arch-anatomy
-description: 把任意神经网络论文的核心架构拆成「可替换的功能部件」，补齐缺失证据，建立上下游问题谱系，并给出可证伪的架构改进方案与理论下潜。当用户给出论文（arXiv 编号 / DOI / PDF / 标题 / 链接 / 粘贴的摘要公式）并要求拆解架构、部件化、找上游或下游工作、改进架构、迁移到自己的问题、从理论/算子层面分析「为什么有效」时使用——即使用户没说「解剖」「部件」这些词。也用于用户只贴一段架构描述并问「好在哪、怎么改、能不能换成别的算子」。不适用于：纯代码复现、纯实验调参、与架构无关的文献综述、只需要一段摘要翻译。
+description: 面向神经网络论文、源码仓库或两者的底层架构逆向与再设计。恢复计算图、张量接口、状态更新、函数空间、算子和复杂度，按功能沉淀组件素材库，检索可复用部件并设计可证伪的新网络。用户要求读论文架构、分析代码架构、替换算子、部件拆解、架构创新或改造神经网络时使用；支持 paper-only、code-only、paper-and-code。
 ---
 
 # 架构解剖（Arch Anatomy）
 
 把一篇论文的神经网络架构变成**可替换、可验证、可计量**的部件结构，并在此基础上给出能被证伪的改进方案。
+
+## 输入与组件工作流（优先路由）
+
+核心交付是神经网络计算图、底层算子、可复用组件及新架构设计。先读 `references/input-modes.md`，选择 paper-only / code-only / paper-and-code 并生成宿主任务图；按图完成实际分析，命令本身不执行 AI 判断。拆解与复用时读 `references/component-library.md`，以 `assets/component-schema.json` 保存组件、构建索引和筛选候选。
+
+只有代码时，以代码位置与快照恢复数学描述，保留 theory_status=reconstructed_or_unverified；只有论文时，不声称存在或验证了真实实现。双来源先独立恢复计算图再对齐。深入到公式、状态、参数共享、不变量、离散化、复杂度假设与替换条件。新架构交付统一计算图、实现计划、最小实验、消融及否定标准。
+
+现有 anatomy.json 论文发布门仍要求主论文证据。code-only 及缺少正式证据的任务交付独立 mode-plan、component records、候选和设计文档；不得伪造 paper.source_id 或声称通过研究发布门。参考组件的结构验证与检索命中不证明理论、实现等价或性能提升。
+
+三个核心任务必须阅读 `references/operator-design-review.md`，按 `assets/architecture-task.schema.json` 交付并校验 JSON；通用宿主响应遵循 `assets/host-response.schema.json`。组件规范版本为 1.1，旧组件显式迁移，不静默放行。审查 completed 仅表示审查结束，若 verdict=unresolved/reject，下游只生成修订与验证计划。
+
+运行真实论文/代码质量评测时读取 `references/architecture-benchmark.md`，保存固定来源、原始预测、参考标注版本和暴露情况。AI 标注草稿不能标成人工 gold；漏检、错误放行、安全正例召回及校验器对抗结果分别报告，不以单一分数替代真实能力评估。
+
+## PyTorch/JAX、训练、性能与搜索
+
+需要框架代码、权重训练、GPU 测量或架构搜索时，读取 `references/framework-training-benchmark-search.md`。这些能力通过固定环境、显式 unavailable、受限 IR 和原始收据接入；不支持的任意网络/算子不能伪装成已编译。task_spec 可声明 framework/training/benchmark/search，结果必须保留版本、设备、随机性、预算和回放边界。
+
+## 目标合同、实际原型与实验闭环
+
+要求反向设计并执行时，先读 `references/executable-design-loop.md`。使用 `task_spec.py` 固定外部接口、数据/目标哈希、硬约束和预算；三入口带 --task-spec 后，设计/审查需附受支持 runtime_ir，实际原型和 experiment_loop 追加到 DAG。完整 operators/dataflow/runtime_ir/task_spec_hash 共同绑定，不只比较端口图。
+
+先用 `architecture_ir.make_task_artifact` 导出与执行 IR 一致的声明，再构建 prototype_builder bundle 并提交。没有目标合同的流程只产出 prototype_planner；不支持的算子不冒充已生成原型。实验需真实执行与回放，开发失败可在固定预算内修订；留出失败必须终止，不能再看留出结果继续选候选。具体支持范围和随包可运行示例以 executable-design-loop.md 为准。
 
 ## v2.5 执行契约（优先于历史示例）
 
@@ -225,3 +247,13 @@ arch-anatomy/
 | 报告 1500 字就结束 | 跳过了下游与理论 | 长度是副产物；检查器会报组覆盖率不足 |
 | checker 报 `claim_type 必须是 theorem/derivation/missing` | 把枚举值写成了中文或自造词 | 所有枚举字段（`claim_type`/`level`/`verdict`/`tag`）必须用检查器接受的英文值；写完 `anatomy.json` **立刻**跑一次 checker，不要等报告写完才发现 |
 | 提案靶点缺少依据 | 把作者强调、理论依赖和消融观察混为一谈 | 分项记录 importance；按可测目标补 contribution_rationale，证据不足可保持 unknown |
+
+通用神经网络系统本体与实时论文观察见 references/neural-system-ontology.md；使用 network_system.py 生成 LLM、CNN、RNN、状态空间、扩散、GNN、神经算子、多模态和混合系统 profile，使用 research_watch.py 获取带响应哈希和时间收据的最新候选论文。
+
+前沿未实现能力必须先走 references/frontier-capability-design.md 与 frontier_capability_design.py，输出创新假设、接口合同、失败条件、证据要求和验证门，不得用可执行原型的局部支持冒充完整能力。
+
+突破性架构探索入口为 breakthrough_explorer.py；它生成结构新颖候选和机制验证门，不把启发式分数当作突破证明。
+
+网络架构设计协议见 references/architecture-design.md；architecture_design.py 负责架构选择、形状/感受野/序列/注意力/跳连合同和标准交付物。
+
+模型画像、训练策略探索和微观设计见 references/model-diagnostics.md；model_diagnostics.py 会把结构观察、IR 推导和设计提案分开输出。

@@ -1,0 +1,305 @@
+{
+  "schema_version": "1.0",
+  "design_id": "frontier-neural-capabilities-v1",
+  "capabilities": [
+    {
+      "id": "jaxpr_lowering",
+      "status": "design_only",
+      "innovation_hypothesis": "Translate closed JAX jaxpr into typed IR with primitive, shape, effect and transformation provenance; preserve unsupported primitives as explicit proof gaps.",
+      "architecture_contract": {
+        "inputs": [
+          "jaxpr, avals, effects, sharding metadata"
+        ],
+        "outputs": [
+          "typed IR plus lowering receipt"
+        ],
+        "state": [
+          "typed IR plus lowering receipt"
+        ],
+        "invariants": [
+          "pure function semantics",
+          "shape/dtype preservation",
+          "effect/sharding preservation"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "jaxpr_unit",
+          "test": "Compare primitive-by-primitive execution against JAX on frozen inputs",
+          "pass_condition": "all outputs and gradients within declared tolerance",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "effect_audit",
+          "test": "Check random/state/control-flow effects are preserved or blocked",
+          "pass_condition": "no effect silently erased",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "dynamic Python behavior outside jaxpr",
+        "unsupported effect or primitive"
+      ],
+      "evidence_requirements": [
+        "frozen JAX version",
+        "jaxpr text hash",
+        "reference outputs",
+        "primitive-level evidence"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    },
+    {
+      "id": "autodiff_backprop",
+      "status": "design_only",
+      "innovation_hypothesis": "Design a differentiable IR with explicit primal, tangent, cotangent and optimizer-state edges so training claims are inspectable.",
+      "architecture_contract": {
+        "inputs": [
+          "primal graph, loss, parameter/state leaves"
+        ],
+        "outputs": [
+          "forward output, gradients, optimizer transition"
+        ],
+        "state": [
+          "forward output, gradients, optimizer transition"
+        ],
+        "invariants": [
+          "gradient shape",
+          "finite gradient policy",
+          "optimizer state ownership"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "finite_difference",
+          "test": "Compare gradients on bounded perturbations",
+          "pass_condition": "relative error below task threshold",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "second_order_or_directional",
+          "test": "Check directional derivative on representative paths",
+          "pass_condition": "all declared trainable leaves covered",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "nondifferentiable custom op",
+        "silent stop_gradient",
+        "state update outside receipt"
+      ],
+      "evidence_requirements": [
+        "framework version",
+        "gradient tape/jaxpr/autograd trace",
+        "seed and loss definition",
+        "gradient comparison receipt"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    },
+    {
+      "id": "conv_recurrent_custom_ops",
+      "status": "design_only",
+      "innovation_hypothesis": "Represent convolution, recurrence and custom kernels as contracts with layout, boundary, state and derivative semantics before implementation.",
+      "architecture_contract": {
+        "inputs": [
+          "tensor layout, kernel/state, boundary conditions"
+        ],
+        "outputs": [
+          "output tensor, next state, gradients"
+        ],
+        "state": [
+          "output tensor, next state, gradients"
+        ],
+        "invariants": [
+          "layout contract",
+          "causality/state transition",
+          "padding/boundary semantics"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "shape_reference",
+          "test": "Compare output shapes and boundary cases",
+          "pass_condition": "all edge cases agree",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "state_replay",
+          "test": "Replay recurrent state transitions",
+          "pass_condition": "same state hash and outputs",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "implicit padding",
+        "hidden mutable state",
+        "custom op without derivative"
+      ],
+      "evidence_requirements": [
+        "source implementation",
+        "equation/kernel reference",
+        "boundary tests",
+        "state transition trace"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    },
+    {
+      "id": "cuda_measurement",
+      "status": "design_only",
+      "innovation_hypothesis": "Separate lowering design from measurement: compile a reviewed kernel path and collect synchronized latency, memory and occupancy evidence.",
+      "architecture_contract": {
+        "inputs": [
+          "typed IR, device, dtype, workload"
+        ],
+        "outputs": [
+          "kernel artifact, timing samples, memory samples"
+        ],
+        "state": [
+          "kernel artifact, timing samples, memory samples"
+        ],
+        "invariants": [
+          "synchronization policy",
+          "warmup/repetition",
+          "device identity"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "cuda_correctness",
+          "test": "Compare CUDA outputs with CPU/reference",
+          "pass_condition": "declared tolerance passes",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "measurement_repeatability",
+          "test": "Repeat with fixed environment",
+          "pass_condition": "variance and sample count meet threshold",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "async timing without sync",
+        "cross-device comparison",
+        "allocator cache ambiguity"
+      ],
+      "evidence_requirements": [
+        "CUDA/toolkit/driver versions",
+        "kernel source or compiler receipt",
+        "synchronization code",
+        "raw profiler output"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    },
+    {
+      "id": "rank5_plus",
+      "status": "design_only",
+      "innovation_hypothesis": "Generalize shape algebra to rank-N tensors with named axes and layout constraints, keeping element count, broadcasting and contraction explicit.",
+      "architecture_contract": {
+        "inputs": [
+          "rank-N shape, named axes, layout"
+        ],
+        "outputs": [
+          "rank-N output and layout"
+        ],
+        "state": [
+          "rank-N output and layout"
+        ],
+        "invariants": [
+          "axis identity",
+          "layout legality",
+          "bounded memory estimate"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "shape_property",
+          "test": "Property-test random legal shapes",
+          "pass_condition": "shape and element count invariant",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "layout_roundtrip",
+          "test": "Round-trip transpose/reshape/layout transforms",
+          "pass_condition": "no silent axis permutation",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "implicit broadcasting",
+        "unbounded memory",
+        "unknown layout conversion"
+      ],
+      "evidence_requirements": [
+        "shape trace",
+        "axis names",
+        "memory budget",
+        "property-test receipt"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    },
+    {
+      "id": "paper_to_fact",
+      "status": "design_only",
+      "innovation_hypothesis": "Convert papers and code into provenance-linked architecture facts through claim extraction, evidence spans, contradiction tracking and human review.",
+      "architecture_contract": {
+        "inputs": [
+          "paper/code snapshots, claim candidates"
+        ],
+        "outputs": [
+          "fact graph, uncertainty graph, review queue"
+        ],
+        "state": [
+          "fact graph, uncertainty graph, review queue"
+        ],
+        "invariants": [
+          "source hash",
+          "evidence span",
+          "fact/inference/proposal separation"
+        ]
+      },
+      "validation_gates": [
+        {
+          "id": "span_check",
+          "test": "Validate every fact against source span",
+          "pass_condition": "no unsupported fact released",
+          "artifact": "validation_receipt.json"
+        },
+        {
+          "id": "contradiction_check",
+          "test": "Compare paper/code/experiments",
+          "pass_condition": "conflicts remain explicit",
+          "artifact": "validation_receipt.json"
+        }
+      ],
+      "failure_conditions": [
+        "abstract-only inference",
+        "team attribution without evidence",
+        "AI draft marked as human gold"
+      ],
+      "evidence_requirements": [
+        "paper snapshot hash",
+        "code commit hash",
+        "line/page spans",
+        "reviewer decision and rationale"
+      ],
+      "design_notes": [
+        "This artifact is a design and validation contract; it does not claim the capability is implemented or validated."
+      ]
+    }
+  ],
+  "trust_policy": {
+    "facts": "Require source snapshot, hash and precise evidence span.",
+    "inferences": "Label derivations and preserve assumptions.",
+    "proposals": "Treat innovations as hypotheses until experiments pass.",
+    "release_rule": "Never promote design_only to validated without all gates, replayable receipts and explicit unresolved questions."
+  }
+}

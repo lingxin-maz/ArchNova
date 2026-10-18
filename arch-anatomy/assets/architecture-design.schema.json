@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "design_id",
+    "task_type",
+    "input_contract",
+    "output_contract",
+    "architecture_choice",
+    "design_principles",
+    "deliverables",
+    "validation_gates"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "design_id": {
+      "type": "string"
+    },
+    "task_type": {
+      "enum": [
+        "tabular_classification",
+        "image_classification",
+        "object_detection",
+        "time_series",
+        "sequence_modeling",
+        "nlp",
+        "long_context_nlp",
+        "deep_image",
+        "neural_operator",
+        "multimodal",
+        "custom"
+      ]
+    },
+    "input_contract": {
+      "type": "object",
+      "required": [
+        "shape",
+        "dtype",
+        "layout"
+      ],
+      "properties": {
+        "shape": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65536
+          }
+        },
+        "dtype": {
+          "type": "string"
+        },
+        "layout": {
+          "type": "string"
+        },
+        "sequence_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "feature_dim": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_contract": {
+      "type": "object",
+      "required": [
+        "shape",
+        "dtype"
+      ],
+      "properties": {
+        "shape": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65536
+          }
+        },
+        "dtype": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "architecture_choice": {
+      "type": "object",
+      "required": [
+        "family",
+        "rationale",
+        "alternatives_rejected"
+      ],
+      "properties": {
+        "family": {
+          "enum": [
+            "mlp",
+            "cnn",
+            "rnn",
+            "state_space",
+            "transformer",
+            "hybrid",
+            "neural_operator"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "alternatives_rejected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "component_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "design_principles": {
+      "type": "object",
+      "required": [
+        "depth",
+        "width",
+        "skip_connections",
+        "normalization",
+        "regularization",
+        "activation"
+      ],
+      "properties": {
+        "depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "skip_connections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "kind"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "normalization": {
+          "type": "string"
+        },
+        "regularization": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "activation": {
+          "type": "string"
+        },
+        "attention_heads": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "receptive_field": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "deliverables": {
+      "type": "object",
+      "required": [
+        "network_definition",
+        "parameter_analysis",
+        "layer_descriptions",
+        "dataflow_graph",
+        "benchmark_plan",
+        "deployment_requirements"
+      ],
+      "properties": {
+        "network_definition": {
+          "type": "object"
+        },
+        "parameter_analysis": {
+          "type": "object"
+        },
+        "layer_descriptions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "dataflow_graph": {
+          "type": "object"
+        },
+        "benchmark_plan": {
+          "type": "object"
+        },
+        "deployment_requirements": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "test",
+          "pass_condition"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "test": {
+            "type": "string"
+          },
+          "pass_condition": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,541 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "component_id",
+    "name",
+    "functional_group",
+    "operator_family",
+    "equation",
+    "input_space",
+    "output_space",
+    "discretization",
+    "parallelism",
+    "parameters",
+    "invariants",
+    "symmetry",
+    "stability_conditions",
+    "replacement_candidates",
+    "tags",
+    "verification_refs",
+    "interface",
+    "complexity",
+    "provenance",
+    "implementation_refs",
+    "verification_status",
+    "schema_version",
+    "ports",
+    "state_contract",
+    "parameter_specs",
+    "field_evidence",
+    "verification"
+  ],
+  "properties": {
+    "component_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*:[a-z][a-z0-9_-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "functional_group": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operator_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "equation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_space": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_space": {
+      "type": "string",
+      "minLength": 1
+    },
+    "discretization": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parallelism": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "symmetry": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "stability_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "replacement_candidates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "verification_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "interface": {
+      "type": "object",
+      "required": [
+        "input_shape",
+        "output_shape",
+        "state",
+        "dtype",
+        "layout"
+      ],
+      "properties": {
+        "input_shape": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "output_shape": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dtype": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "complexity": {
+      "type": "object",
+      "required": [
+        "time",
+        "memory",
+        "assumptions"
+      ],
+      "properties": {
+        "time": {
+          "type": "string",
+          "minLength": 1
+        },
+        "memory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "ref",
+          "locator",
+          "id"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "paper_fact",
+              "code_observed",
+              "derived",
+              "proposed"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "implementation_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "locator",
+          "status"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "reference",
+              "observed",
+              "tested"
+            ]
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "verification_status": {
+      "enum": [
+        "unverified",
+        "partially_verified",
+        "verified"
+      ]
+    },
+    "schema_version": {
+      "enum": [
+        "1.1"
+      ]
+    },
+    "ports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/port"
+      }
+    },
+    "state_contract": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "stateless",
+            "recurrent",
+            "unknown"
+          ]
+        },
+        "initialization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "update_equation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reset": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gradient_policy": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "initialization",
+        "update_equation",
+        "reset",
+        "gradient_policy"
+      ],
+      "additionalProperties": false
+    },
+    "parameter_specs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shape": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "shared_with": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "constraint": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "shape",
+          "shared_with",
+          "constraint"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "field_evidence": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true,
+        "minItems": 1
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "shape",
+              "numerical",
+              "gradient",
+              "stability",
+              "complexity",
+              "equivalence",
+              "provenance"
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "passed",
+              "failed"
+            ]
+          },
+          "artifact_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "artifact_ref",
+          "sha256",
+          "scope"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "port": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "input",
+            "output"
+          ]
+        },
+        "object_type": {
+          "enum": [
+            "tensor",
+            "scalar",
+            "sequence",
+            "field",
+            "point_set",
+            "state"
+          ]
+        },
+        "shape": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
+        "axes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 0
+        },
+        "dtype": {
+          "enum": [
+            "float16",
+            "bfloat16",
+            "float32",
+            "float64",
+            "int32",
+            "int64",
+            "bool",
+            "complex64",
+            "complex128",
+            "unknown"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "measure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "external": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "owner",
+        "direction",
+        "object_type",
+        "shape",
+        "axes",
+        "dtype",
+        "unit",
+        "measure",
+        "state",
+        "external"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

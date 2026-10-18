@@ -1,0 +1,213 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "artifact_kind": {
+      "enum": [
+        "design_loop"
+      ]
+    },
+    "task_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "initial_model_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "task_input_hash": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "upstream_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "task_id",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "task_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "initial_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "initial_prototype": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repairs": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "enum": [
+          "relu",
+          "absolute"
+        ]
+      }
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "accepted",
+        "budget_exhausted",
+        "no_viable_candidate",
+        "holdout_failed"
+      ]
+    },
+    "attempts": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parent_hash": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            ]
+          },
+          "model_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "prototype_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prototype_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "development": {
+            "type": "object"
+          },
+          "decision": {
+            "enum": [
+              "select_for_holdout",
+              "revise"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposal_model_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "training": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "benchmarks": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "index",
+          "rule",
+          "parent_hash",
+          "model_hash",
+          "prototype_path",
+          "prototype_sha256",
+          "development",
+          "decision",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "holdout": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "scope_limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "lifecycle": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "task_hash",
+    "initial_model_hash",
+    "task_input_hash",
+    "upstream_artifacts",
+    "task_path",
+    "initial_path",
+    "initial_prototype",
+    "repairs",
+    "status",
+    "attempts",
+    "holdout",
+    "events",
+    "scope_limits"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-04/schema#"
+}

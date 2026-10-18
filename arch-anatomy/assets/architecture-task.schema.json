@@ -1,0 +1,1056 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0"
+      ]
+    },
+    "artifact_kind": {
+      "enum": [
+        "decomposition",
+        "design",
+        "replacement_review"
+      ]
+    },
+    "input_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "operators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "component_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "equation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "discretization": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "complexity_assumptions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "component_id",
+          "equation",
+          "domain",
+          "discretization",
+          "evidence_ids",
+          "complexity_assumptions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "dataflow": {
+      "$ref": "#/definitions/dataflow"
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "paper_fact",
+              "code_observed",
+              "derived",
+              "proposed"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "ref",
+          "locator"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scope_limits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "included": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "granularity_rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "included",
+        "excluded",
+        "granularity_rationale"
+      ],
+      "additionalProperties": false
+    },
+    "baseline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "affected_parts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "changes_shared_parameters": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "experiment": {
+      "type": "object",
+      "properties": {
+        "baseline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "lower_better",
+            "higher_better"
+          ]
+        },
+        "dataset_split": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget_control": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seeds": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "integer"
+          },
+          "uniqueItems": true
+        },
+        "ablation_plan": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "kill_criterion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "executed"
+          ]
+        },
+        "receipt_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "decision_rule": {
+          "type": "object",
+          "properties": {
+            "metric_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "condition_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "aggregation": {
+              "enum": [
+                "mean",
+                "median"
+              ]
+            },
+            "min_seeds": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "expression": {
+              "type": "string",
+              "minLength": 1
+            },
+            "operator": {
+              "enum": [
+                "gt",
+                "ge",
+                "lt",
+                "le"
+              ]
+            },
+            "threshold": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "unit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "metric_id",
+            "condition_id",
+            "aggregation",
+            "min_seeds",
+            "expression",
+            "operator",
+            "threshold"
+          ],
+          "additionalProperties": false
+        },
+        "metric_definition": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "unit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "baseline",
+        "metric",
+        "direction",
+        "dataset_split",
+        "budget_control",
+        "seeds",
+        "ablation_plan",
+        "kill_criterion",
+        "status",
+        "receipt_refs",
+        "decision_rule",
+        "metric_definition"
+      ],
+      "additionalProperties": false
+    },
+    "relation": {
+      "enum": [
+        "interface_only",
+        "exact_equivalence",
+        "approximation",
+        "new_function_class",
+        "unknown"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameter_mapping": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proof_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "type": "object",
+        "properties": {
+          "dimension": {
+            "enum": [
+              "interface",
+              "function_class",
+              "state",
+              "causality",
+              "symmetry",
+              "stability",
+              "precision",
+              "gradient",
+              "cost",
+              "sharing",
+              "training"
+            ]
+          },
+          "status": {
+            "enum": [
+              "satisfied",
+              "violated",
+              "unknown",
+              "not_applicable"
+            ]
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "dimension",
+          "status",
+          "conditions",
+          "evidence_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "verdict": {
+      "enum": [
+        "admit",
+        "conditional",
+        "reject",
+        "unresolved"
+      ]
+    },
+    "upstream_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "task_id",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "cost_predictions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expression": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variables": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "unit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assumptions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "expression",
+          "variables",
+          "unit",
+          "assumptions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "mechanism",
+          "tradeoff",
+          "decision",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mechanism": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tradeoff": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "enum": [
+              "select",
+              "reject"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "task_spec_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "runtime_ir": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "enum": [
+            "1.0"
+          ]
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+              },
+              "shape": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 4,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 64
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                    }
+                  ]
+                }
+              },
+              "dtype": {
+                "enum": [
+                  "float64"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "shape",
+              "dtype"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+              },
+              "value": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "items": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 64,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "trainable": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "value",
+              "trainable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+              },
+              "op": {
+                "enum": [
+                  "identity",
+                  "scale",
+                  "relu",
+                  "tanh",
+                  "linear",
+                  "add",
+                  "matmul",
+                  "transpose",
+                  "softmax",
+                  "reshape",
+                  "concat",
+                  "layernorm"
+                ]
+              },
+              "inputs": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                }
+              },
+              "attributes": {
+                "type": "object"
+              },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "op",
+              "inputs",
+              "attributes",
+              "parameters"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 8,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "inputs",
+        "parameters",
+        "nodes",
+        "outputs"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-04/schema#"
+    }
+  },
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "input_hash",
+    "operators",
+    "dataflow",
+    "evidence",
+    "scope_limits",
+    "unresolved",
+    "upstream_artifacts"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "dataflow": {
+      "type": "object",
+      "properties": {
+        "node_parts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/port"
+          },
+          "minItems": 1
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/edge"
+          }
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "part_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "node_parts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "role": {
+                "enum": [
+                  "annotation",
+                  "measurement"
+                ]
+              }
+            },
+            "required": [
+              "part_id",
+              "node_parts",
+              "role"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "shared_parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 2
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "parts",
+              "description"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "coupled_replacements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 2
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "parts",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "node_parts",
+        "ports",
+        "edges",
+        "bindings",
+        "shared_parameters",
+        "coupled_replacements"
+      ],
+      "additionalProperties": false
+    },
+    "port": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "input",
+            "output"
+          ]
+        },
+        "object_type": {
+          "enum": [
+            "tensor",
+            "scalar",
+            "sequence",
+            "field",
+            "point_set",
+            "state"
+          ]
+        },
+        "shape": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
+        "axes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 0
+        },
+        "dtype": {
+          "enum": [
+            "float16",
+            "bfloat16",
+            "float32",
+            "float64",
+            "int32",
+            "int64",
+            "bool",
+            "complex64",
+            "complex128",
+            "unknown"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "measure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "external": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "owner",
+        "direction",
+        "object_type",
+        "shape",
+        "axes",
+        "dtype",
+        "unit",
+        "measure",
+        "state",
+        "external"
+      ],
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "data",
+            "state"
+          ]
+        },
+        "delay": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "target",
+        "kind",
+        "delay"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "artifact_kind": {
+          "enum": [
+            "decomposition"
+          ]
+        }
+      },
+      "required": [
+        "coverage"
+      ]
+    },
+    {
+      "properties": {
+        "artifact_kind": {
+          "enum": [
+            "design"
+          ]
+        }
+      },
+      "required": [
+        "baseline",
+        "objectives",
+        "affected_parts",
+        "changes_shared_parameters",
+        "experiment",
+        "cost_predictions",
+        "alternatives"
+      ]
+    },
+    {
+      "properties": {
+        "artifact_kind": {
+          "enum": [
+            "replacement_review"
+          ]
+        }
+      },
+      "required": [
+        "relation",
+        "domain",
+        "parameter_mapping",
+        "proof_evidence_ids",
+        "checks",
+        "verdict",
+        "affected_parts",
+        "changes_shared_parameters"
+      ]
+    }
+  ]
+}
