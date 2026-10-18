@@ -172,7 +172,7 @@ def main(argv=None):
         if name=='score':p.add_argument('--gold',required=True);p.add_argument('--predictions',required=True)
         if name=='run':
             p.add_argument('--endpoint',required=True);p.add_argument('--model',required=True);p.add_argument('--run-id',required=True)
-            p.add_argument('--key-env',default='ARCH_ANATOMY_REVIEW_API_KEY');p.add_argument('--prior-exposure',choices=['none','known','unknown'],default='unknown')
+            p.add_argument('--key-env',default='ARCHNOVA_REVIEW_API_KEY');p.add_argument('--prior-exposure',choices=['none','known','unknown'],default='unknown')
     a=ap.parse_args(argv)
     if not a.command:ap.error('Choose prepare, collect, run or score')
     target=Path(a.output)

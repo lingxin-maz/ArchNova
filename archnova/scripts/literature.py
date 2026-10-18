@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Free literature lookups for arch-anatomy (no API key required).
+"""Free literature lookups for archnova (no API key required).
 
 Wraps OpenAlex (primary), Semantic Scholar (citation contexts), Crossref (DOI
 metadata) and the arXiv API.  Every response is cached on disk so repeated runs
@@ -29,11 +29,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-UA = {"User-Agent": "arch-anatomy/1.0 (literature helper)"}
+UA = {"User-Agent": "archnova/1.0 (literature helper)"}
 # Cache lives outside the skill dir: polling it into ./ would bloat any
 # packaged .skill and scatter junk into the user's project directory.
-CACHE_DIR = os.environ.get("ARCH_ANATOMY_CACHE") or os.path.join(
-    tempfile.gettempdir(), "arch-anatomy-cache")
+CACHE_DIR = os.environ.get("ARCHNOVA_CACHE") or os.path.join(
+    tempfile.gettempdir(), "archnova-cache")
 TTL_SECONDS = 24 * 3600
 
 def _force_utf8():
@@ -508,7 +508,7 @@ def cmd_find(args):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Free literature lookups for arch-anatomy.")
+    ap = argparse.ArgumentParser(description="Free literature lookups for archnova.")
     sub = ap.add_subparsers(dest="cmd")
 
     p = sub.add_parser("resolve", help="resolve an id/title to one work")

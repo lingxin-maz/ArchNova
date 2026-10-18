@@ -172,7 +172,7 @@ def gen_schema(o):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "$comment": "GENERATED from ontology.json v%s by scripts/build_ontology.py" % o["version"],
-        "title": "arch-anatomy anatomy.json v2",
+        "title": "archnova anatomy.json v2",
         "type": "object",
         "required": ["schema_version", "sources", "paper", "core_architecture", "interface_contract", "parts",
                      "claims", "metrics", "cost_model", "upstream", "downstream",

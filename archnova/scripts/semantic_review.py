@@ -245,7 +245,7 @@ def check_reviews(data,rep,bundle_root,release=False):
     return summary
 
 
-def api_reviewer(endpoint,model,key_env='ARCH_ANATOMY_REVIEW_API_KEY',timeout=60,json_mode=True,system_prompt=None):
+def api_reviewer(endpoint,model,key_env='ARCHNOVA_REVIEW_API_KEY',timeout=60,json_mode=True,system_prompt=None):
     parsed=urllib.parse.urlparse(endpoint)
     if parsed.username or parsed.password or parsed.query or parsed.fragment or (parsed.scheme!='https' and not(parsed.scheme=='http' and parsed.hostname in ('localhost','127.0.0.1','::1'))):
         raise ValueError('Use HTTPS (or a loopback HTTP service), without credentials in URL')
@@ -271,7 +271,7 @@ def main(argv=None):
         parser=sub.add_parser(name);parser.add_argument('anatomy');parser.add_argument('-o','--output',required=True)
         if name=='run':
             parser.add_argument('--endpoint',required=True);parser.add_argument('--model',required=True)
-            parser.add_argument('--key-env',default='ARCH_ANATOMY_REVIEW_API_KEY');parser.add_argument('--max-tasks',type=int,default=25)
+            parser.add_argument('--key-env',default='ARCHNOVA_REVIEW_API_KEY');parser.add_argument('--max-tasks',type=int,default=25)
             parser.add_argument('--no-json-mode',action='store_true')
         if name=='apply':parser.add_argument('--reviews',required=True)
     args=ap.parse_args(argv)

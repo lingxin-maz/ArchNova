@@ -1,7 +1,7 @@
 {
   "$comment": "规范源：组、槽位、枚举、阶段和策略。build_ontology.py 生成 schema、ontology_gen.py 和 ontology.md；样例和评测是独立审查的测试数据，不宣称由生成器自动更新。",
   "version": "2.5.0",
-  "title": "arch-anatomy ontology",
+  "title": "archnova ontology",
   "groups": [
     {
       "id": "R",

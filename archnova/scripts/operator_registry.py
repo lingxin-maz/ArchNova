@@ -20,12 +20,12 @@ def validate_record(record):
  return record
 def fetch_record(url,expected_sha256=None,timeout=15):
  if not str(url).startswith('https://'): raise ValueError('Only HTTPS operator sources are allowed')
- req=urllib.request.Request(url,headers={'User-Agent':'arch-anatomy-operator-registry/1.0'})
+ req=urllib.request.Request(url,headers={'User-Agent':'archnova-operator-registry/1.0'})
  with urllib.request.urlopen(req,timeout=timeout) as response: body=response.read(MAX_BYTES+1)
  if len(body)>MAX_BYTES: raise ValueError('Operator record exceeds size limit')
  actual=hashlib.sha256(body).hexdigest()
  if expected_sha256 and actual!=expected_sha256: raise ValueError('Operator record SHA-256 mismatch')
- record=json.loads(body.decode('utf8'));validate_record(record);record=dict(record);record['retrieval']={'url':url,'sha256':actual,'retrieved_by':'arch-anatomy'};return record
+ record=json.loads(body.decode('utf8'));validate_record(record);record=dict(record);record['retrieval']={'url':url,'sha256':actual,'retrieved_by':'archnova'};return record
 def save_record(record,path):
  validate_record(record);atomic_write(path,record);return {'path':str(path),'sha256':digest(record),'status':record['verification']['status']}
 def activate_record(record,local_implementation=False):

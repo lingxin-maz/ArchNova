@@ -16,7 +16,7 @@ def _safe_ast(path,framework,entry):
 
 def _torch_fx(path,entry,example_inputs):
  import importlib.util,torch,torch.fx
- spec=importlib.util.spec_from_file_location('arch_anatomy_reviewed_module',str(path));module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ spec=importlib.util.spec_from_file_location('archnova_reviewed_module',str(path));module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
  target=getattr(module,entry,None)
  if target is None: raise ValueError('entry not found: '+entry)
  instance=target() if isinstance(target,type) else target

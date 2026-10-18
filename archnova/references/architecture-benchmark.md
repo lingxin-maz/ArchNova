@@ -1,6 +1,6 @@
 # 真实论文与代码架构评测
 
-开发材料包位于工作区 `arch-anatomy-workspace/real-architecture-eval/`，不将完整论文和第三方源码装进技能包。材料固定 arXiv 原文、GitHub commit、来源文件、原始行号、SHA-256 和许可证。案例包括 minGPT、torchvision Bottleneck、neuraloperator SpectralConv 及原始 Transformer 论文，覆盖 code-only、paper-and-code、paper-only。
+开发材料包位于工作区 `archnova-workspace/real-architecture-eval/`，不将完整论文和第三方源码装进技能包。材料固定 arXiv 原文、GitHub commit、来源文件、原始行号、SHA-256 和许可证。案例包括 minGPT、torchvision Bottleneck、neuraloperator SpectralConv 及原始 Transformer 论文，覆盖 code-only、paper-and-code、paper-only。
 
 ## 三类证据分别报告
 

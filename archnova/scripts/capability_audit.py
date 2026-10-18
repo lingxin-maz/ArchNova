@@ -10,7 +10,7 @@ REQUIRED_DOCS=['executable-design-loop.md','framework-training-benchmark-search.
 def _check(identifier,ok,detail): return {'id':identifier,'status':'pass' if ok else 'fail','detail':detail}
 
 def audit(root):
- root=Path(root).resolve(); scripts=root/'scripts'; assets=root/'assets'; refs=root/'references'; dist=root.parent/'dist'/'arch-anatomy'
+ root=Path(root).resolve(); scripts=root/'scripts'; assets=root/'assets'; refs=root/'references'; dist=root.parent/'dist'/'archnova'
  checks=[]
  missing=[n for n in REQUIRED_MODULES if not (scripts/n).is_file()]
  checks.append(_check('runtime_modules',not missing,'all required runtime modules present' if not missing else 'missing: '+','.join(missing)))

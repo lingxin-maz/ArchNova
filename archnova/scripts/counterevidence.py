@@ -35,7 +35,7 @@ def fetch(url):
     parsed=urllib.parse.urlparse(url)
     if parsed.scheme!='https' or parsed.hostname not in ('api.crossref.org','export.arxiv.org'):raise ValueError('Only fixed read-only literature API hosts are supported')
     try:
-        request=urllib.request.Request(url,headers={'User-Agent':'arch-anatomy-counterevidence/2.5'})
+        request=urllib.request.Request(url,headers={'User-Agent':'archnova-counterevidence/2.5'})
         with urllib.request.urlopen(request,timeout=12) as response:
             raw=response.read(3*1024*1024+1)
             if len(raw)>3*1024*1024:raise ValueError('Counter-search response budget exceeded')

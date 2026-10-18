@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic validator for an arch-anatomy result.
+"""Deterministic validator for an archnova result.
 
 Usage
 -----
@@ -407,7 +407,7 @@ def check_report(path, rep, data=None):
 # reference verification (network)
 # --------------------------------------------------------------------------
 
-UA = {"User-Agent": "arch-anatomy/1.0 (checker; contact: local)"}
+UA = {"User-Agent": "archnova/1.0 (checker; contact: local)"}
 
 
 def _get(url, timeout=25, retries=2):
@@ -719,7 +719,7 @@ def check_stage(data, rep, release=False):
 # --------------------------------------------------------------------------
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Validate an arch-anatomy result.")
+    ap = argparse.ArgumentParser(description="Validate an archnova result.")
     ap.add_argument("anatomy", help="path to anatomy.json")
     ap.add_argument("--report", help="path to report.md")
     ap.add_argument("--verify-refs", action="store_true", help="resolve every arXiv/DOI id online")

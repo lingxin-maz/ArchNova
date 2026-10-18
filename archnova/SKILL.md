@@ -1,9 +1,9 @@
 ---
-name: arch-anatomy
+name: archnova
 description: 面向神经网络论文、源码仓库或两者的底层架构逆向与再设计。恢复计算图、张量接口、状态更新、函数空间、算子和复杂度，按功能沉淀组件素材库，检索可复用部件并设计可证伪的新网络。用户要求读论文架构、分析代码架构、替换算子、部件拆解、架构创新或改造神经网络时使用；支持 paper-only、code-only、paper-and-code。
 ---
 
-# 架构解剖（Arch Anatomy）
+# ArchNova — 神经网络架构分析与创新设计
 
 把一篇论文的神经网络架构变成**可替换、可验证、可计量**的部件结构，并在此基础上给出能被证伪的改进方案。
 
@@ -196,7 +196,7 @@ python scripts/github_repos.py --assess repos.json --reviews repo-reviews.json -
 ## 文件
 
 ```
-arch-anatomy/
+archnova/
 ├── SKILL.md                      ← 本文件：流程与铁律
 ├── references/
 │   ├── part-taxonomy.md          ← 12 组槽位定义、swap 测试、终止规则

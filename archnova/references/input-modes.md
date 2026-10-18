@@ -1,6 +1,6 @@
 # 三种输入入口
 
-从 arch-anatomy 目录在 Git Bash 执行：
+从 archnova 目录在 Git Bash 执行：
 
 ```bash
 python scripts/input_modes.py paper-only paper.pdf -o run/plan.json --tasks run/tasks.json --state run/state.json

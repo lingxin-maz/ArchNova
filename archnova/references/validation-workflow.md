@@ -1,4 +1,4 @@
-# arch-anatomy v2.5 修改与验证说明
+# archnova v2.5 修改与验证说明
 
 唯一契约源是 ontology.json。v2.5 增加证明依赖 DAG、接口/状态审查上下文、实现探索覆盖、本地适配实验、审查质量评测、主动反证检索、数学目标绑定、原始响应回放和两种发布模式。Python 3.7+ 与 jsonschema 执行 Draft 4 schema、关系、累积摘要、证据快照、受限数值、语义审查与报告一致性检查。旧版本先 migrate，再补齐，禁止静默升级为已验证结果。
 
@@ -20,8 +20,8 @@
 ```bash
 python scripts/build_ontology.py --check
 python -B -m unittest discover -s tests -v
-python scripts/render_report.py assets/anatomy.fixture.json -o ../arch-anatomy-workspace/fixture-report.md
-python scripts/check_anatomy.py assets/anatomy.fixture.json --strict --report ../arch-anatomy-workspace/fixture-report.md
+python scripts/render_report.py assets/anatomy.fixture.json -o ../archnova-workspace/fixture-report.md
+python scripts/check_anatomy.py assets/anatomy.fixture.json --strict --report ../archnova-workspace/fixture-report.md
 python scripts/build_package.py
 ```
 

@@ -20,7 +20,7 @@ def content_hash(value):return hashlib.sha256(json.dumps(value,ensure_ascii=Fals
 def get_json(url):
     if urllib.parse.urlparse(url).scheme!='https' or urllib.parse.urlparse(url).hostname!='api.github.com':
         return {'ok':False,'error':'Only HTTPS api.github.com requests are supported','status':None}
-    headers={'Accept':'application/vnd.github+json','User-Agent':'arch-anatomy-repository-discovery','X-GitHub-Api-Version':'2022-11-28'}
+    headers={'Accept':'application/vnd.github+json','User-Agent':'archnova-repository-discovery','X-GitHub-Api-Version':'2022-11-28'}
     token=os.environ.get('GITHUB_TOKEN')
     if token:headers['Authorization']='Bearer '+token
     try:

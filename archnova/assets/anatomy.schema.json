@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$comment": "GENERATED from ontology.json v2.5.0 by scripts/build_ontology.py",
-  "title": "arch-anatomy anatomy.json v2",
+  "title": "archnova anatomy.json v2",
   "type": "object",
   "required": [
     "schema_version",

@@ -38,7 +38,7 @@ python scripts/proof_checks.py case.json -o result.json
 无需为普通技能使用者再配置服务。只有用户明确要无人值守后端时，才使用：
 
 ```bash
-python scripts/semantic_review.py run anatomy.draft.json --endpoint https://YOUR-SERVICE/v1/chat/completions --model YOUR-MODEL --key-env ARCH_ANATOMY_REVIEW_API_KEY -o reviews.json
+python scripts/semantic_review.py run anatomy.draft.json --endpoint https://YOUR-SERVICE/v1/chat/completions --model YOUR-MODEL --key-env ARCHNOVA_REVIEW_API_KEY -o reviews.json
 ```
 
 要求兼容 chat-completions JSON，必要时 --no-json-mode。密钥只从命名环境变量读取，不写入产物。HTTPS 或本机 HTTP；--max-tasks 默认 25。服务失败、JSON 无效、缺证据会产生 insufficient 或失败，不能默认为通过。代码包含适配器；某服务是否兼容以真实调用为准。

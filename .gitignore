@@ -6,7 +6,7 @@
 *.skill.manifest.json
 
 # Local research and workbench artifacts
-/arch-anatomy-workspace/
+/archnova-workspace/
 /.archive/
 /.graphflow/
 *.log

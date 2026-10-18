@@ -6,7 +6,7 @@ from orchestrator import atomic_write,digest
 TEAMS={'openai':['OpenAI'],'deepmind':['Google DeepMind','DeepMind'],'meta_fair':['Meta AI','Facebook AI Research'],'microsoft':['Microsoft Research'],'nvidia':['NVIDIA Research'],'anthropic':['Anthropic'],'berkeley':['University of California, Berkeley'],'stanford':['Stanford University']}
 TAGS={'kv_cache':['kv cache','paged attention','key-value cache','inference memory'],'optimizer_state':['optimizer state','adam','zero','fsdp','sharding'],'mixture_of_experts':['mixture of experts','moe','router','expert'],'tokenizer':['tokenizer','bpe','sentencepiece'],'tensor_parallel':['tensor parallel','sequence parallel','expert parallel'],'pipeline_parallel':['pipeline parallel','pipeline bubbles'],'spectral_or_kernel_operator':['neural operator','fourier neural operator','spectral convolution'],'message_passing':['graph neural','message passing','graph transformer'],'noise_schedule':['diffusion','score model','noise schedule'],'state_space':['state space model','selective scan','ssm'],'cross_attention':['multimodal','cross-attention','vision-language'],'normalization':['rmsnorm','layernorm','normalization']}
 def _get(url,timeout=20):
- req=urllib.request.Request(url,headers={'User-Agent':'arch-anatomy-research-watch/1.0'})
+ req=urllib.request.Request(url,headers={'User-Agent':'archnova-research-watch/1.0'})
  with urllib.request.urlopen(req,timeout=timeout) as r:
   body=r.read(4*1024*1024+1)
  if len(body)>4*1024*1024: raise ValueError('Research response exceeds budget')

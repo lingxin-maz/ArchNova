@@ -1,11 +1,11 @@
-# arch-anatomy
+# ArchNova
 
 面向神经网络的架构分析、组件检索、功能导向设计与证据验证 skill。
 
 ## 项目结构
 
 ```text
-arch-anatomy/
+archnova/
   SKILL.md             技能入口
   requirements.txt     Python 依赖
   ontology.json        架构本体
@@ -21,11 +21,11 @@ README.md
 
 ## 安装
 
-将 `arch-anatomy/` 文件夹复制到所需位置的 `.codex/skills/arch-anatomy/`。
+将 `archnova/` 文件夹复制到所需位置的 `.codex/skills/archnova/`。
 安装 Python 工具依赖：
 
 ```shell
-python -m pip install -r arch-anatomy/requirements.txt
+python -m pip install -r archnova/requirements.txt
 ```
 
 PyTorch/JAX 为可选依赖；基础测试与参考运行时不要求安装它们。
@@ -40,23 +40,23 @@ PyTorch/JAX 为可选依赖；基础测试与参考运行时不要求安装它�
 - 实验与回放：`scripts/design_loop.py`
 - 文献候选检索：`scripts/research_watch.py`
 
-以上路径相对于 `arch-anatomy/`。具体参数通过各脚本 `--help` 查看；使用流程见 `SKILL.md` 和 `references/`。
+以上路径相对于 `archnova/`。具体参数通过各脚本 `--help` 查看；使用流程见 `SKILL.md` 和 `references/`。
 
 ## 验证
 
 ```shell
-python -B -m unittest discover -s arch-anatomy/tests
-python arch-anatomy/scripts/build_ontology.py --check
-python arch-anatomy/scripts/capability_audit.py arch-anatomy
+python -B -m unittest discover -s archnova/tests
+python archnova/scripts/build_ontology.py --check
+python archnova/scripts/capability_audit.py archnova
 ```
 
 ## 构建安装包
 
 ```shell
-python arch-anatomy/scripts/build_codex_skill.py
+python archnova/scripts/build_codex_skill.py
 ```
 
-生成 `dist/arch-anatomy/` 和 `dist/arch-anatomy-codex-skill.zip`。生成物不纳入源码仓库，可作为 GitHub Release 附件发布。
+生成 `dist/archnova/` 和 `dist/archnova-codex-skill.zip`。生成物不纳入源码仓库，可作为 GitHub Release 附件发布。
 
 ## 能力边界
 
