@@ -1,1 +1,3 @@
+# Optional Python tooling and maintainer tests only; not required to use the Agent skill.
 jsonschema>=2.6,<5
+

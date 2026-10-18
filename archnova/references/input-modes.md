@@ -1,6 +1,6 @@
 # 三种输入入口
 
-从 archnova 目录在 Git Bash 执行：
+默认由宿主 Agent 直接选择材料模式并完成分析，无需命令或依赖。下面仅是可选 Python 调度工具的示例；需要程序化任务文件时，从 archnova 目录执行：
 
 ```bash
 python scripts/input_modes.py paper-only paper.pdf -o run/plan.json --tasks run/tasks.json --state run/state.json
@@ -18,3 +18,4 @@ paper-only 也接受 HTTP(S) URL，但状态为 retrieval_pending，宿主必须
 核心三任务现有专属 JSON 产物门；提交格式、依赖哈希和验证方法见 operator-design-review.md。其他角色仍由宿主完成并使用通用 envelope，不得将协议回归当作真实 AI 分析能力评测。
 
 可执行分支：增加 --task-spec task.json，固定目标合同并追加实际原型/实验闭环任务。无合同分支改为 prototype_planner，不能再标称原型执行完成。详见 executable-design-loop.md。
+
