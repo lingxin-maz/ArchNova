@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["schema_version", "security", "physical", "bias", "invisible_layers", "admission"],
+  "properties": {
+    "schema_version": {"enum": ["1.0"]},
+    "security": {"type": "object"},
+    "physical": {"type": "object"},
+    "bias": {"type": "object"},
+    "invisible_layers": {"type": "object"},
+    "admission": {"type": "object", "required": ["status"]}
+  },
+  "additionalProperties": false
+}
