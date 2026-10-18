@@ -3,9 +3,9 @@
 import argparse,ast,hashlib,json
 from pathlib import Path
 
-REQUIRED_MODULES=['architecture_ir.py','architecture_search.py','tensor_runtime.py','lifecycle_runtime.py','benchmark_runtime.py','design_loop.py','framework_adapters.py','input_modes.py','operator_registry.py','network_system.py','research_watch.py','frontier_capability_design.py','innovation_pipeline.py','breakthrough_explorer.py','architecture_design.py','model_diagnostics.py','prototype_builder.py','prototype_runtime.py','task_contracts.py','task_spec.py','training_runtime.py']
-REQUIRED_SCHEMAS=['task-spec.schema.json','runtime-ir.schema.json','prototype.schema.json','design-loop.schema.json','host-response.schema.json']
-REQUIRED_DOCS=['executable-design-loop.md','framework-training-benchmark-search.md','neural-system-ontology.md','frontier-capability-design.md','breakthrough-exploration.md','architecture-design.md','model-diagnostics.md','input-modes.md','operator-design-review.md','architecture-benchmark.md']
+REQUIRED_MODULES=['architecture_ir.py','architecture_search.py','graph_composer.py','tensor_runtime.py','lifecycle_runtime.py','benchmark_runtime.py','design_loop.py','framework_adapters.py','input_modes.py','operator_registry.py','network_system.py','research_watch.py','frontier_capability_design.py','innovation_pipeline.py','breakthrough_explorer.py','architecture_design.py','model_diagnostics.py','prototype_builder.py','prototype_runtime.py','task_contracts.py','task_spec.py','training_runtime.py']
+REQUIRED_SCHEMAS=['task-spec.schema.json','runtime-ir.schema.json','graph-ir.schema.json','prototype.schema.json','design-loop.schema.json','host-response.schema.json']
+REQUIRED_DOCS=['executable-design-loop.md','framework-training-benchmark-search.md','neural-system-ontology.md','frontier-capability-design.md','breakthrough-exploration.md','architecture-design.md','graphir-composition.md','model-diagnostics.md','input-modes.md','operator-design-review.md','architecture-benchmark.md']
 
 def _check(identifier,ok,detail): return {'id':identifier,'status':'pass' if ok else 'fail','detail':detail}
 
@@ -53,6 +53,7 @@ def audit(root):
 def main():
  p=argparse.ArgumentParser();p.add_argument('root',nargs='?',default='.');p.add_argument('-o','--output');a=p.parse_args();result=audit(a.root);text=json.dumps(result,ensure_ascii=False,indent=2)+'\n';Path(a.output).write_text(text,encoding='utf8') if a.output else print(text,end='');
 if __name__=='__main__':main()
+
 
 
 

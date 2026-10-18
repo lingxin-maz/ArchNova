@@ -437,6 +437,66 @@
         ],
         "additionalProperties": false
       }
+    },
+    "calculation_contract": {
+      "type": "object",
+      "properties": {
+        "causal": {
+          "type": "boolean"
+        },
+        "length_preserving": {
+          "type": "boolean"
+        },
+        "equivariance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "extra_state": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "mutation_surface": {
+      "type": "object",
+      "properties": {
+        "allowed_ops": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mutable_parameters": {
+          "type": "object"
+        },
+        "editable_subgraphs": {
+          "type": "boolean"
+        },
+        "allowed_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,

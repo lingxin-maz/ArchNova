@@ -25,7 +25,13 @@ class BreakthroughExplorerTests(unittest.TestCase):
   from architecture_design import design
   r=design('image_classification',[32,32,3],[10],required_functions=['long_range_dependency','spectral_or_physics'],component_catalog=[{'id':'ssm','family':'state_space'},{'id':'fno','family':'neural_operator'}])
   self.assertEqual(r['architecture_choice']['component_sources'],['ssm','fno']);self.assertEqual(r['architecture_choice']['functional_requirements'],['long_range_dependency','spectral_or_physics'])
+ def test_graph_ir_validates_typed_edges_mutation_surface_and_no_orphans(self):
+  from graph_composer import validate_graph,apply_edit,ablation_plan,score_graph
+  components={'norm':{'component_id':'norm','ports':[{'id':'in','direction':'input','shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'},{'id':'out','direction':'output','shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'}]},'mix':{'component_id':'mix','ports':[{'id':'in','direction':'input','shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'},{'id':'out','direction':'output','shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'}]}}
+  graph={'schema_version':'1.0','inputs':['input'],'outputs':['out'],'nodes':[{'id':'norm_0','component_id':'norm','mutable':{'op':['norm']},'scope':'block'},{'id':'mix_0','component_id':'mix','mutable':{'op':['mix']},'scope':'block'}],'edges':[{'id':'e0','from':'input','to':'norm_0.in','type':{'shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'}},{'id':'e1','from':'norm_0.out','to':'mix_0.in','type':{'shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'}},{'id':'e2','from':'mix_0.out','to':'out','type':{'shape':['B','N','D'],'dtype':'float32','layout':'BND','state':'none'}}],'constraints':{'max_nodes':4,'max_params':1000,'max_cost':10000,'forbidden':['identity_chain','orphan_node']},'budget':{'max_params':1000,'max_kv_bytes_per_token':512}}
+  validate_graph(graph,components);edited=apply_edit(graph,{'op':'insert','node':{'id':'norm_1','component_id':'norm','mutable':{'op':['norm']},'scope':'block'},'edge_src':'mix_0.out','edge_dst':'out'},components);self.assertTrue(validate_graph(edited,components));self.assertTrue(ablation_plan(edited));self.assertIn('anti_stack_penalty',score_graph(edited,components))
 if __name__=='__main__':unittest.main()
+
 
 
 

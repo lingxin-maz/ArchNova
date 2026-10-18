@@ -4,6 +4,7 @@ import argparse,itertools,json,math
 from pathlib import Path
 from orchestrator import atomic_write,digest
 from network_system import validate_system
+from graph_composer import score_graph,ablation_plan
 
 def _component_id(c): return c.get('component_id') or c.get('id') or c.get('name')
 def _family(c): return c.get('family') or c.get('functional_group') or c.get('operator_family') or 'unknown'
@@ -16,7 +17,7 @@ def generate_candidates(system,components,budget=8):
    if not ids or not families:continue
    novelty=min(1.0,(len(set(ids)-base)+len(families))/6.0)
    mechanism=' + '.join(families)+' introduces a distinct computational or state pathway; verify causality and interface contracts.'
-   candidate={'id':'candidate:'+digest({'system':system['system_id'],'components':ids})[:16],'system_id':system['system_id'],'component_ids':ids,'families':families,'novelty_score':round(novelty,6),'mechanism_hypothesis':mechanism,'complexity_proxy':len(ids)*len(families),'status':'design_only'}
+   candidate={'id':'candidate:'+digest({'system':system['system_id'],'components':ids})[:16],'system_id':system['system_id'],'component_ids':ids,'families':families,'novelty_score':round(novelty,6),'mechanism_hypothesis':mechanism,'complexity_proxy':len(ids)*len(families),'mutation_surface':{'allowed_actions':['insert','replace','rewire','duplicate_branch','merge','prune'],'required_reason':'Every edit must explain new information flow or conditional dependency'},'edit_diagnostics':{'anti_stack_penalty':0.0,'ablation_required':True},'status':'design_only'}
    candidates.append(candidate)
  candidates.sort(key=lambda c:(-c['novelty_score'],c['complexity_proxy'],c['id']))
  return candidates[:max(1,min(budget,32))]
@@ -37,7 +38,7 @@ def evaluate_promotion(candidate,receipts):
 def build_exploration(system,components,baseline=None,budget=8,task=None):
  candidates=[]
  for c in generate_candidates(system,components,budget):
-  c['score']=score_candidate(c,baseline);c['validation_plan']=build_validation_plan(c,baseline,task);candidates.append(c)
+  c['score']=score_candidate(c,baseline);c['validation_plan']=build_validation_plan(c,baseline,task);c['validation_plan']['gates'].append({'id':'structural_necessity','test':'Run leave-one-node/edge ablations and inspect information-flow change','pass_condition':'New component or edge is necessary and not a serial duplicate','required_receipts':['ablation_plan','information_flow_receipt']});c['ablation_plan']=ablation_plan({'nodes':[{'id':x,'component_id':x} for x in c['component_ids']]});candidates.append(c)
  return {'schema_version':'1.0','exploration_id':'breakthrough:'+digest(system)[:16],'system_id':system['system_id'],'system_snapshot_hash':digest(system),'candidates':candidates,'search_mode':'mechanism_constrained_open_composition','promotion_policy':'No candidate is breakthrough proof without baseline, ablation, counterexample, repeatability, cost and evidence receipts.','status':'design_only'}
 def main():
  p=argparse.ArgumentParser();p.add_argument('--system',required=True);p.add_argument('--components',required=True);p.add_argument('--budget',type=int,default=8);p.add_argument('-o','--output',required=True);a=p.parse_args()
@@ -45,3 +46,5 @@ def main():
   system=json.loads(Path(a.system).read_text(encoding='utf8'));raw=json.loads(Path(a.components).read_text(encoding='utf8'));components=raw.get('components',raw if isinstance(raw,list) else []);result=build_exploration(system,components,budget=a.budget);atomic_write(a.output,result);print(json.dumps({'status':result['status'],'candidates':len(result['candidates']),'output':a.output}))
  except (ValueError,OSError,KeyError) as exc:p.error(str(exc))
 if __name__=='__main__':main()
+
+
